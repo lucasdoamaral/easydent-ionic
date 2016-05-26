@@ -1,0 +1,28 @@
+<!--
+Create tabs with an icon and label, using the tabs-positive style.
+Each tab's child <ion-nav-view> directive will have its own
+navigation history that also transitions its views in and out.
+-->
+<ion-tabs class="tabs-icon-only tabs-color-light tabs-color-active-light tabs-background-positive">
+
+  <ion-tab title="Pacientes" icon-off="ion-ios-people-outline" icon-on="ion-ios-people" href="#/tab/pacientes">
+    <ion-nav-view name="tab-pacientes"></ion-nav-view>
+  </ion-tab>
+
+  <ion-tab title="Dentistas" icon-off="ion-ios-medkit-outline" icon-on="ion-ios-medkit" href="#/tab/dentistas">
+    <ion-nav-view name="tab-dentistas"></ion-nav-view>
+  </ion-tab>
+
+  <ion-tab title="Agendamentos" icon-off="ion-ios-calendar-outline" icon-on="ion-ios-calendar" href="#/tab/agendamentos">
+    <ion-nav-view name="tab-agendamentos"></ion-nav-view>
+  </ion-tab>
+
+  <ion-tab title="Laboratórios" icon-off="ion-ios-flask-outline" icon-on="ion-ios-flask" href="#/tab/laboratorios">
+    <ion-nav-view name="tab-laboratorios"></ion-nav-view>
+  </ion-tab>
+
+  <ion-tab title="Pendências" icon-off="ion-ios-chatboxes-outline" icon-on="ion-ios-chatboxes" href="#/tab/pendencias">
+    <ion-nav-view name="tab-pendencias"></ion-nav-view>
+  </ion-tab>
+
+</ion-tabs>
