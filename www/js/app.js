@@ -5,10 +5,7 @@
 // the 2nd parameter is an array of 'requires'
 // 'starter.services' is found in services.js
 // 'starter.controllers' is found in controllers.js
-angular.module('easydent', [
-  'ionic',
-  'easydent.controllers', 'easydent.services', 'easydent.directives'
-])
+angular.module('easydent', ['ionic', 'easydent.controllers', 'easydent.services', 'easydent.directives', 'ui.rCalendar'])
 
 .run(function($ionicPlatform) {
   $ionicPlatform.ready(function() {

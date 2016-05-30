@@ -27,6 +27,29 @@ angular.module('easydent.controllers', [])
   };
 })
 
+.controller('AgendamentosCtrl', function($scope, Agendamentos) {
+
+  $scope.agendamentos = [];
+  Agendamentos.todos().success(function(response) {
+    $scope.agendamentos = converterAgendamentos(response);
+  })
+
+  function converterAgendamentos(agendamentos) {
+    convertidos = [];
+    for (var i = 0; i < agendamentos.length; i++) {
+      agendamento = agendamentos[i];
+      convertido = {};
+      convertido.title = agendamento.dentista.nome + ' - ' + agendamento.paciente.nome + ' - ' + agendamento.procedimento;
+      convertido.startTime = new Date(agendamento.data);
+      convertido.endTime = new Date(agendamento.data + (15 * 60000));
+      convertido.allDay = false;
+      convertidos.push(convertido);
+    }
+    return convertidos;
+  }
+
+})
+
 .controller('PacientesCtrl', function($scope, $stateParams, Pacientes, $ionicLoading, $ionicActionSheet) {
 
   $scope.loadData = function() {
@@ -112,10 +135,6 @@ angular.module('easydent.controllers', [])
         console.log("Erro ao salvar.");
       })
   }
-
-})
-
-.controller('AgendamentosCtrl', function($scope, $stateParams) {
 
 })
 

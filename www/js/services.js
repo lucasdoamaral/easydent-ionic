@@ -52,6 +52,14 @@ angular.module('easydent.services', [])
   }
 })
 
+.service('Agendamentos', function($http) {
+  return {
+    todos: function(dataFiltro) {
+      return $http.get('https://easydent.jelasticlw.com.br/easydent-webservice/rest/consultas')
+    }
+  }
+})
+
 .factory('Chats', function() {
   // Might use a resource here that returns a JSON array
 
