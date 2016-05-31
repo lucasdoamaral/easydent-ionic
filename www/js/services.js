@@ -56,7 +56,22 @@ angular.module('easydent.services', [])
   return {
     todos: function(dataFiltro) {
       return $http.get('https://easydent.jelasticlw.com.br/easydent-webservice/rest/consultas')
+    },
+
+    converterAgendamentos: function(agendamentos) {
+      agendamentosConvertidos = [];
+      for (var i = 0; i < agendamentos.length; i++) {
+        agendamento = agendamentos[i];
+        convertido = {};
+        convertido.title = agendamento.dentista.nome + ' - ' + agendamento.paciente.nome + ' - ' + agendamento.procedimento;
+        convertido.startTime = new Date(agendamento.data);
+        convertido.endTime = new Date(agendamento.data + (agendamento.duracaoMinutos * 60000));
+        convertido.allDay = agendamento.diaCompleto;
+        agendamentosConvertidos.push(convertido);
+      }
+      return agendamentosConvertidos;
     }
+
   }
 })
 

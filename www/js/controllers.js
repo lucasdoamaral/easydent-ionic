@@ -3,6 +3,7 @@ angular.module('easydent.controllers', [])
 .controller('DashCtrl', function($scope) {})
 
 .controller('ChatsCtrl', function($scope, Chats) {
+
   // With the new view caching in Ionic, Controllers are only called
   // when they are recreated or on app start, instead of every page change.
   // To listen for when this page is active (for example, to refresh data),
@@ -31,28 +32,15 @@ angular.module('easydent.controllers', [])
 
   $scope.agendamentos = [];
   Agendamentos.todos().success(function(response) {
-    $scope.agendamentos = converterAgendamentos(response);
-  })
-
-  function converterAgendamentos(agendamentos) {
-    convertidos = [];
-    for (var i = 0; i < agendamentos.length; i++) {
-      agendamento = agendamentos[i];
-      convertido = {};
-      convertido.title = agendamento.dentista.nome + ' - ' + agendamento.paciente.nome + ' - ' + agendamento.procedimento;
-      convertido.startTime = new Date(agendamento.data);
-      convertido.endTime = new Date(agendamento.data + (15 * 60000));
-      convertido.allDay = false;
-      convertidos.push(convertido);
-    }
-    return convertidos;
-  }
+    $scope.agendamentos = Agendamentos.converterAgendamentos(response);
+  });
 
 })
 
 .controller('PacientesCtrl', function($scope, $stateParams, Pacientes, $ionicLoading, $ionicActionSheet) {
 
   $scope.loadData = function() {
+    $scope.pacientes = [];
     $ionicLoading.show({
       template: '<ion-spinner class="spinner-positive"></ion-spinner><br />Aguarde'
     });
@@ -69,17 +57,17 @@ angular.module('easydent.controllers', [])
   }
 
   $scope.$on('$ionicView.enter', function(e) {
-
-    $scope.pacientes = [];
     $scope.loadData();
-
   });
 
   $scope.pacienteHold = function(paciente) {
     $scope.actionSheet = $ionicActionSheet.show({
       buttons: [{
         text: 'Ver histórico'
+      }, {
+        text: 'Agendar Consulta'
       }],
+
       destructiveText: 'Excluir',
       destructiveButtonClicked: function() {
         Pacientes.excluir(paciente.id).then(
@@ -92,10 +80,11 @@ angular.module('easydent.controllers', [])
           });
         return true;
       },
+
       titleText: paciente.nome,
       cancelText: 'Cancelar',
       cancel: function() {
-        // add cancel code..
+        console.log('Botão Cancelar pressionado.');
       },
       buttonClicked: function(index) {
         console.log("Botão clicado: " + index);
@@ -115,7 +104,7 @@ angular.module('easydent.controllers', [])
   $scope.paciente = {};
   if ($stateParams.pacienteId) {
     $ionicLoading.show({
-      template: '<ion-spinner class="spinner-positive"></ion-spinner><br />Aguarde'
+      template: '<ion-spinner class="spinner-balanced"></ion-spinner><br />Aguarde'
     });
     Pacientes.buscar($stateParams.pacienteId).success(function(response) {
       $scope.paciente = response;

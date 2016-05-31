@@ -29,7 +29,7 @@ angular.module('easydent', ['ionic', 'easydent.controllers', 'easydent.services'
   // $ionicConfigProvider.tabs.style('striped').position('bottom');
   $ionicConfigProvider.tabs.style('standard').position('bottom');
   $ionicConfigProvider.navBar.alignTitle('center');
-  $ionicConfigProvider.spinner.icon('lines');
+  $ionicConfigProvider.spinner.icon('dots');
   // Ionic uses AngularUI Router which uses the concept of states
   // Learn more here: https://github.com/angular-ui/ui-router
   // Set up the various states which the app can be in.
