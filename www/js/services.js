@@ -1,3 +1,5 @@
+"use strict";
+
 angular.module('easydent.services', [])
 
 .service('Pacientes', function($http, $rootScope, $stateParams) {

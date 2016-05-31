@@ -1,3 +1,5 @@
+"use strict";
+
 angular.module('easydent.controllers', [])
 
 .controller('DashCtrl', function($scope) {})
