@@ -61,10 +61,10 @@ angular.module('easydent.services', [])
     },
 
     converterAgendamentos: function(agendamentos) {
-      agendamentosConvertidos = [];
+      var agendamentosConvertidos = [];
       for (var i = 0; i < agendamentos.length; i++) {
-        agendamento = agendamentos[i];
-        convertido = {};
+        var agendamento = agendamentos[i];
+        var convertido = {};
         convertido.title = agendamento.dentista.nome + ' - ' + agendamento.paciente.nome + ' - ' + agendamento.procedimento;
         convertido.startTime = new Date(agendamento.data);
         convertido.endTime = new Date(agendamento.data + (agendamento.duracaoMinutos * 60000));
