@@ -32,10 +32,21 @@ angular.module('easydent.controllers', [])
 
 .controller('AgendamentosCtrl', function($scope, Agendamentos) {
 
-  $scope.agendamentos = [];
+  $scope.calendar = {
+    mode: "month",
+    agendamentos: [],
+    step: 15,
+    allDayLabel: "Lembrete",
+    noEventsLabel: "Sem eventos"
+  };
+
   Agendamentos.todos().success(function(response) {
-    $scope.agendamentos = Agendamentos.converterAgendamentos(response);
+    $scope.calendar.agendamentos = Agendamentos.converterAgendamentos(response);
   });
+
+  $scope.changeMode = function (mode) {
+    $scope.calendar.mode = mode;
+  }
 
 })
 

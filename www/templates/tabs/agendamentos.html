@@ -1,7 +1,14 @@
-<ion-view view-title="Agendamentos" ng-controller="NavCtrl">
-  <ion-content>
+<ion-view ng-controller="AgendamentosCtrl">
 
-    <calendar calendar-mode="mode" event-source="agendamentos">
+	<ion-nav-buttons side="right">
+		<button class="button" ng-disabled="isToday()" ng-click="today()">Hoje</button>
+		<button class="button" ng-click="changeMode('month')">M</button>
+		<button class="button" ng-click="changeMode('week')">S</button>
+		<button class="button" ng-click="changeMode('day')">D</button>
+	</ion-nav-buttons>
 
-  </ion-content>
+	<ion-content> 
+		<calendar calendar-mode="calendar.mode" event-source="calendar.agendamentos" step="calendar.step" allDayLabel="calendar.AllDayLabel" noEventsLabel="calendar.noEventsLabel" queryMode="remote" />
+	</ion-content>
+
 </ion-view>
