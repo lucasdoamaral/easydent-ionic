@@ -12,8 +12,9 @@
     <ion-refresher pulling-text="Atualizando..." on-refresh="refreshData()">
     </ion-refresher>
 
-    <ion-list>
-      <ion-item on-hold="pacienteHold({{paciente}})" ng-repeat="paciente in pacientes" href="#tab/pacientes/{{paciente.id}}">
+    <ion-list ng-if="listaCarregada">
+      <ion-item ng-if="!pacientes.length">Nenhum paciente cadastrado</ion-item>
+      <ion-item ng-if="pacientes.length" on-hold="pacienteHold({{paciente}})" ng-repeat="paciente in pacientes" href="#tab/pacientes/{{paciente.id}}">
         {{paciente.nome}}
       </ion-item>
     </ion-list>

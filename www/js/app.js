@@ -7,39 +7,50 @@
 // the 2nd parameter is an array of 'requires'
 // 'starter.services' is found in services.js
 // 'starter.controllers' is found in controllers.js
-angular.module('easydent', ['ionic', 'easydent.controllers', 'easydent.services', 'easydent.directives', 'ui.rCalendar'])
+angular.module('easydent', ['ionic', 
+  'easydent.controllers', 'easydent.services', 'easydent.directives', 
+  'ui.rCalendar'])
 
 .run(function($ionicPlatform) {
+
   $ionicPlatform.ready(function() {
-    // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
-    // for form inputs)
     if (window.cordova && window.cordova.plugins && window.cordova.plugins.Keyboard) {
       cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
       cordova.plugins.Keyboard.disableScroll(true);
     }
     if (window.StatusBar) {
-      // org.apache.cordova.statusbar required
       StatusBar.styleDefault();
     }
-
   });
+
 })
 
 .config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider) {
 
   $ionicConfigProvider.backButton.text('Voltar');
   // $ionicConfigProvider.tabs.style('striped').position('bottom');
-  $ionicConfigProvider.tabs.style('standard').position('bottom');
-  $ionicConfigProvider.navBar.alignTitle('center');
-  $ionicConfigProvider.spinner.icon('dots');
+  //$ionicConfigProvider.tabs.style('standard').position('bottom');
+  //$ionicConfigProvider.navBar.alignTitle('center');
+  //$ionicConfigProvider.spinner.icon('dots');
   // Ionic uses AngularUI Router which uses the concept of states
   // Learn more here: https://github.com/angular-ui/ui-router
   // Set up the various states which the app can be in.
   // Each state's controller can be found in controllers.js
   $stateProvider
 
-  // setup an abstract state for the tabs directive
-    .state('tab', {
+  .state('login', {
+    url: '/login',
+    templateUrl: 'templates/login.html',
+    controller: 'LoginCtrl'
+  })
+
+  .state('esqueci-senha', {
+    url: '/esqueci-senha',
+    templateUrl: 'templates/esqueci-senha.html',
+    controller: 'EsqueciSenhaCtrl'
+  })
+
+  .state('tab', {
     url: '/tab',
     abstract: true,
     templateUrl: 'templates/tabs.html'
@@ -54,6 +65,9 @@ angular.module('easydent', ['ionic', 'easydent.controllers', 'easydent.services'
         templateUrl: 'templates/tabs/pacientes.html',
         controller: 'PacientesCtrl'
       }
+    },
+    data: {
+      requiresLogin: true
     }
   })
 
@@ -161,7 +175,3 @@ angular.module('easydent', ['ionic', 'easydent.controllers', 'easydent.services'
   $urlRouterProvider.otherwise('/tab/dash');
 
 })
-
-.constant('SERVER', {
-  url: 'https://easydent.jelasticlw.com.br/easydent-webservice'
-});

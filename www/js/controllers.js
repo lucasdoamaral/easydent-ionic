@@ -2,34 +2,6 @@
 
 angular.module('easydent.controllers', [])
 
-.controller('DashCtrl', function($scope) {})
-
-.controller('ChatsCtrl', function($scope, Chats) {
-
-  // With the new view caching in Ionic, Controllers are only called
-  // when they are recreated or on app start, instead of every page change.
-  // To listen for when this page is active (for example, to refresh data),
-  // listen for the $ionicView.enter event:
-  //
-  //$scope.$on('$ionicView.enter', function(e) {
-  //});
-
-  $scope.chats = Chats.all();
-  $scope.remove = function(chat) {
-    Chats.remove(chat);
-  };
-})
-
-.controller('ChatDetailCtrl', function($scope, $stateParams, Chats) {
-  $scope.chat = Chats.get($stateParams.chatId);
-})
-
-.controller('AccountCtrl', function($scope) {
-  $scope.settings = {
-    enableFriends: true
-  };
-})
-
 .controller('AgendamentosCtrl', function($scope, Agendamentos) {
 
   $scope.calendar = {
@@ -37,32 +9,51 @@ angular.module('easydent.controllers', [])
     agendamentos: [],
     step: 15,
     allDayLabel: "Lembrete",
-    noEventsLabel: "Sem eventos"
+    noEventsLabel: "Sem eventos",
+    data: new Date()
   };
 
   Agendamentos.todos().success(function(response) {
     $scope.calendar.agendamentos = Agendamentos.converterAgendamentos(response);
   });
 
-  $scope.changeMode = function (mode) {
+  $scope.changeMode = function(mode) {
     $scope.calendar.mode = mode;
+  }
+
+  $scope.hoje = function () {
+    $scope.calendar.data = new Date();
   }
 
 })
 
-.controller('PacientesCtrl', function($scope, $stateParams, Pacientes, $ionicLoading, $ionicActionSheet) {
+.controller('PacientesCtrl', function($scope, $stateParams, Pacientes, $ionicLoading, $ionicActionSheet, $ionicPopup) {
+
+  $scope.listaCarregada = false;
 
   $scope.loadData = function() {
     $scope.pacientes = [];
     $ionicLoading.show({
-      template: '<ion-spinner class="spinner-positive"></ion-spinner><br />Aguarde'
+      template: '<ion-spinner class="spinner-balanced"></ion-spinner><br />Aguarde'
     });
-    Pacientes.todos().success(
+    Pacientes.todos().then(
       function(response) {
-        $scope.pacientes = response;
+        $scope.pacientes = response.data;
+        $scope.listaCarregada = true;
         $scope.$broadcast('scroll.refreshComplete');
         $ionicLoading.hide()
-      })
+      },
+      function() {
+        $scope.pacientes = [];
+        $scope.listaCarregada = true;
+        console.log("Houve um erro ao carregar os dados");
+        $scope.$broadcast('scroll.refreshComplete');
+        $ionicLoading.hide()
+        $ionicPopup.alert({
+          title: 'Erro de Conexão',
+          template: 'Houve um problema ao carregar os pacientes'
+        });
+      });
   }
 
   $scope.refreshData = function() {
@@ -112,18 +103,30 @@ angular.module('easydent.controllers', [])
 
 })
 
+.controller('LoginCtrl', function($scope) {
+
+})
+
+.controller('EsqueciSenhaCtrl', function () {
+
+})
+
 .controller('PacienteDetailCtrl', function($scope, $stateParams, Pacientes, $ionicLoading, $ionicHistory, $state) {
 
   $scope.paciente = {};
   if ($stateParams.pacienteId) {
+    $scope.nomePaciente = " ";
     $ionicLoading.show({
       template: '<ion-spinner class="spinner-balanced"></ion-spinner><br />Aguarde'
     });
     Pacientes.buscar($stateParams.pacienteId).success(function(response) {
       $scope.paciente = response;
+      $scope.nomePaciente = "Editar Paciente";
       $scope.paciente.dataNascimento = new Date(response.dataNascimento);
       $ionicLoading.hide();
     });
+  } else {
+    $scope.nomePaciente = "Novo Paciente";
   }
 
   $scope.salvar = function() {

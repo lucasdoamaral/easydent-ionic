@@ -8,17 +8,25 @@ angular.module('easydent.services', [])
       sort = sort || 'nome';
       maxResults = maxResults || 0;
       offset = offset || 0;
-      return $http.get('https://easydent.jelasticlw.com.br/easydent-webservice/rest/pacientes?sort=' + sort + "&max-results=" + maxResults + "&offset=" + offset)
+      return $http.get('http://localhost:8080/easydent-server/rest/pacientes?sort=' + sort + "&max-results=" + maxResults + "&offset=" + offset, {
+        timeout: 5000
+      })
     },
     buscar: function(id) {
-      return $http.get('https://easydent.jelasticlw.com.br/easydent-webservice/rest/pacientes/' + id)
+      return $http.get('http://localhost:8080/easydent-server/rest/pacientes/' + id)
     },
     salvar: function(paciente) {
-      return $http.post('https://easydent.jelasticlw.com.br/easydent-webservice/rest/pacientes/', paciente)
+      return $http.post('http://localhost:8080/easydent-server/rest/pacientes/', paciente)
     },
     excluir: function(id) {
-      return $http.delete('https://easydent.jelasticlw.com.br/easydent-webservice/rest/pacientes/' + id)
+      return $http.delete('http://localhost:8080/easydent-server/rest/pacientes/' + id)
     }
+  }
+})
+
+.service('Login', function ($http) {
+  return {
+    
   }
 })
 
