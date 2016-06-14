@@ -1,6 +1,33 @@
-"use strict";
 
 angular.module('easydent.controllers', [])
+
+.controller('AppCtrl', function($scope, $state, $ionicPopup, AuthService, AUTH_EVENTS) {
+
+  $scope.username = AuthService.username();
+
+  $scope.teste = "TESTE APP CTRL";
+
+  $scope.$on(AUTH_EVENTS.notAuthorized, function(event) {
+    var alertPopup = $ionicPopup.alert({
+      title: 'Unauthorized!',
+      template: 'You are not allowed to access this resource.'
+    });
+  });
+
+  $scope.$on(AUTH_EVENTS.notAuthenticated, function(event) {
+    AuthService.logout();
+    $state.go('login');
+    var alertPopup = $ionicPopup.alert({
+      title: 'Sessão Expirada',
+      template: 'Faça o login novamente'
+    });
+  });
+
+  $scope.setCurrentUsername = function(name) {
+    $scope.username = name;
+  };
+
+})
 
 .controller('AgendamentosCtrl', function($scope, Agendamentos) {
 
@@ -43,16 +70,20 @@ angular.module('easydent.controllers', [])
         $scope.$broadcast('scroll.refreshComplete');
         $ionicLoading.hide()
       },
-      function() {
-        $scope.pacientes = [];
-        $scope.listaCarregada = true;
-        console.log("Houve um erro ao carregar os dados");
+      function(error) {
         $scope.$broadcast('scroll.refreshComplete');
         $ionicLoading.hide()
-        $ionicPopup.alert({
-          title: 'Erro de Conexão',
-          template: 'Houve um problema ao carregar os pacientes'
-        });
+        if (error.status == 401) {
+          console.log('401 ERROR');
+        }else{
+          $scope.pacientes = [];
+          $scope.listaCarregada = true;
+          console.log("Houve um erro ao carregar os dados");
+          $ionicPopup.alert({
+            title: 'Erro de Conexão',
+            template: 'Houve um problema ao carregar os pacientes'
+          });
+        }
       });
   }
 
@@ -103,11 +134,25 @@ angular.module('easydent.controllers', [])
 
 })
 
-.controller('LoginCtrl', function($scope) {
+.controller('LoginCtrl', function($scope, $state, $ionicPopup, AuthService) {
 
+  $scope.login = {};
+
+  $scope.entrar = function(data) {
+    if (data.usuario && data.senha){
+      AuthService.entrar(data.usuario, data.senha).then(
+        function(authenticated) {
+          $state.go('tab.home', {}, {reload: true});
+        }, function(err) {
+          $ionicPopup.alert({
+            title: 'Login failed!',
+            template: 'Please check your credentials!'
+          });
+        });
+    }
+  };
 })
-
-.controller('EsqueciSenhaCtrl', function () {
+.controller('EsqueciSenhaCtrl', function ($state) {
 
 })
 
@@ -172,6 +217,10 @@ angular.module('easydent.controllers', [])
   $scope.toState = function(state) {
     $state.go(state);
   }
+
+})
+
+.controller('HomeCtrl', function() {
 
 })
 

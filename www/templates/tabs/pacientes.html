@@ -2,9 +2,10 @@
 
   <ion-nav-buttons side="primary">
     <!-- <button class="button button-clear" ng-click="toState('tab.paciente-new')"> Novo</button> -->
-    <button class="button button-clear" ng-click="toState('tab.paciente-new')">
+    <!-- <button class="button button-clear" ng-click="toState('tab.paciente-new')">
       <i class="icon ion-plus-round"></i>
-    </button>
+    </button> -->
+    <button class="button" ng-click="toState('tab.paciente-new')">+ Novo</button> 
   </ion-nav-buttons>
 
   <ion-content>
@@ -13,10 +14,19 @@
     </ion-refresher>
 
     <ion-list ng-if="listaCarregada">
+
       <ion-item ng-if="!pacientes.length">Nenhum paciente cadastrado</ion-item>
-      <ion-item ng-if="pacientes.length" on-hold="pacienteHold({{paciente}})" ng-repeat="paciente in pacientes" href="#tab/pacientes/{{paciente.id}}">
+      <!-- <ion-item ng-if="pacientes.length" on-hold="pacienteHold({{paciente}})" ng-repeat="paciente in pacientes" href="#tab/pacientes/{{paciente.id}}">
+        {{paciente.nome}} <strong>{{paciente.telefone}}</strong>
+      </ion-item> -->
+      <a ng-repeat="paciente in pacientes" class="item item-icon-left" href="#tab/pacientes/{{paciente.id}}">
+        <i class="icon ion-person"></i>
         {{paciente.nome}}
-      </ion-item>
+        <span class="item-note">
+          {{paciente.telefone}}
+        </span>
+      </a>
+
     </ion-list>
 
     <ion-infinite-scroll on-infinite="loadMoreData()" distance="10%" ng-if="hasMoreData()">

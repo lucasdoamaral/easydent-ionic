@@ -9,10 +9,11 @@
 // 'starter.controllers' is found in controllers.js
 angular.module('easydent', ['ionic', 
   'easydent.controllers', 'easydent.services', 'easydent.directives', 
-  'ui.rCalendar'])
+  'ui.rCalendar', 'ui.utils', 'ngMessages'])
 
-.run(function($ionicPlatform) {
+.run(function($ionicPlatform, $rootScope, AuthService) {
 
+  // Verificações para ajustes visuais do teclado e barra de status  
   $ionicPlatform.ready(function() {
     if (window.cordova && window.cordova.plugins && window.cordova.plugins.Keyboard) {
       cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
@@ -21,7 +22,7 @@ angular.module('easydent', ['ionic',
     if (window.StatusBar) {
       StatusBar.styleDefault();
     }
-  });
+  })
 
 })
 
@@ -40,14 +41,18 @@ angular.module('easydent', ['ionic',
 
   .state('login', {
     url: '/login',
-    templateUrl: 'templates/login.html',
+    templateUrl: 'templates/login/login.html',
     controller: 'LoginCtrl'
+  })
+
+  .state('welcome', {
+    url: '/welcome',
+    templateUrl: 'templates/welcome.html'
   })
 
   .state('esqueci-senha', {
     url: '/esqueci-senha',
     templateUrl: 'templates/esqueci-senha.html',
-    controller: 'EsqueciSenhaCtrl'
   })
 
   .state('tab', {
@@ -57,6 +62,16 @@ angular.module('easydent', ['ionic',
   })
 
   // Each tab has its own nav history stack:
+
+  .state('tab.home', {
+    url: '/home',
+    views: {
+      'tab-home': {
+        templateUrl: 'templates/tabs/home.html',
+        controller: 'HomeCtrl'
+      }
+    }
+  })
 
   .state('tab.pacientes', {
     url: '/pacientes',
@@ -111,26 +126,6 @@ angular.module('easydent', ['ionic',
     }
   })
 
-  .state('tab.dash', {
-    url: '/dash',
-    views: {
-      'tab-dash': {
-        templateUrl: 'templates/default/tab-dash.html',
-        controller: 'DashCtrl'
-      }
-    }
-  })
-
-  .state('tab.chats', {
-    url: '/chats',
-    views: {
-      'tab-chats': {
-        templateUrl: 'templates/default/tab-chats.html',
-        controller: 'ChatsCtrl'
-      }
-    }
-  })
-
   .state('tab.paciente-detail', {
     url: '/pacientes/:pacienteId',
     views: {
@@ -151,27 +146,47 @@ angular.module('easydent', ['ionic',
     }
   })
 
-  .state('tab.chat-detail', {
-    url: '/chats/:chatId',
-    views: {
-      'tab-chats': {
-        templateUrl: 'templates/default/chat-detail.html',
-        controller: 'ChatDetailCtrl'
+  ;
+
+  // if none of the above states are matched, use this as the fallback
+  $urlRouterProvider.otherwise('/tab/home');
+
+})
+
+.factory('AuthInterceptor', function ($rootScope, $q, AUTH_EVENTS) {
+  return {
+    responseError: function (response) {
+      //response.status = response.status == -1? 401:response.status;
+      $rootScope.$broadcast({
+        401: AUTH_EVENTS.notAuthenticated,
+        403: AUTH_EVENTS.notAuthorized
+      }[response.status], response);
+      return $q.reject(response);
+    }
+  };
+})
+
+.config(function ($httpProvider) {
+  $httpProvider.interceptors.push('AuthInterceptor');
+})
+
+.run(function ($rootScope, $state, AuthService, AUTH_EVENTS) {
+  $rootScope.$on('$stateChangeStart', function (event,next, nextParams, fromState) {
+
+    if ('data' in next && 'authorizedRoles' in next.data) {
+      var authorizedRoles = next.data.authorizedRoles;
+      if (!AuthService.isAuthorized(authorizedRoles)) {
+        event.preventDefault();
+        $state.go($state.current, {}, {reload: true});
+        $rootScope.$broadcast(AUTH_EVENTS.notAuthorized);
       }
     }
-  })
 
-  .state('tab.account', {
-    url: '/account',
-    views: {
-      'tab-account': {
-        templateUrl: 'templates/default/tab-account.html',
-        controller: 'AccountCtrl'
+    if (!AuthService.isAuthenticated()) {
+      if (next.name !== 'login') {
+        event.preventDefault();
+        $state.go('login');
       }
     }
   });
-
-  // if none of the above states are matched, use this as the fallback
-  $urlRouterProvider.otherwise('/tab/dash');
-
 })
