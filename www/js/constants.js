@@ -6,5 +6,6 @@ angular.module('easydent')
 })
 
 .constant('SERVER', {
-	url: 'http://easydent-test.underjelastic.com.br/easydent-server/rest'
+	// url: 'http://localhost:8080/easydent-server/rest',
+	url: 'https://easydent-test.underjelastic.com.br/easydent-server/rest',
 })

@@ -1,11 +1,7 @@
-<ion-view view-title="Pacientes" ng-controller="NavCtrl">
+<ion-view view-title="Pacientes" ng-controller="PacientesCtrl">
 
-  <ion-nav-buttons side="primary">
-    <!-- <button class="button button-clear" ng-click="toState('tab.paciente-new')"> Novo</button> -->
-    <!-- <button class="button button-clear" ng-click="toState('tab.paciente-new')">
-      <i class="icon ion-plus-round"></i>
-    </button> -->
-    <button class="button" ng-click="toState('tab.paciente-new')">+ Novo</button> 
+  <ion-nav-buttons side="right">
+    <button class="button" ng-click="novo()">Novo</button>
   </ion-nav-buttons>
 
   <ion-content>
@@ -16,29 +12,19 @@
     <ion-list ng-if="listaCarregada">
 
       <ion-item ng-if="!pacientes.length">Nenhum paciente cadastrado</ion-item>
+
       <ion-item ng-repeat="paciente in pacientes" on-hold="pacienteHold({{paciente}})" href="#tab/pacientes/{{paciente.id}}">
-        <i class="icon ion-person"></i>
-        {{paciente.nome}}
+        <i class="icon ion-person"></i> {{paciente.nome}}
         <span class="item-note">
-          {{paciente.telefone}}
+          {{paciente.celular || paciente.telefone | tel}}
         </span>
       </ion-item>
-      <!-- <ion-item ng-if="pacientes.length" on-hold="pacienteHold({{paciente}})" ng-repeat="paciente in pacientes" href="#tab/pacientes/{{paciente.id}}">
-        {{paciente.nome}} <strong>{{paciente.telefone}}</strong>
-      </ion-item> -->
-<!--       <a ng-repeat="paciente in pacientes" class="item item-icon-left" href="#tab/pacientes/{{paciente.id}}">
-        <i class="icon ion-person"></i>
-        {{paciente.nome}}
-        <span class="item-note">
-          {{paciente.telefone}}
-        </span>
-      </a>
-    -->
-  </ion-list>
 
-  <ion-infinite-scroll on-infinite="loadMoreData()" distance="10%" ng-if="hasMoreData()">
-  </ion-infinite-scroll>
+    </ion-list>
 
-</ion-content>
+    <!-- <ion-infinite-scroll on-infinite="loadMoreData()" distance="10%" ng-if="hasMoreData()">
+    </ion-infinite-scroll> -->
+
+  </ion-content>
 
 </ion-view>

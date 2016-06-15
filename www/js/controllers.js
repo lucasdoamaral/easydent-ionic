@@ -54,9 +54,13 @@ angular.module('easydent.controllers', [])
 
 })
 
-.controller('PacientesCtrl', function($scope, $stateParams, Pacientes, $ionicLoading, $ionicActionSheet, $ionicPopup) {
+.controller('PacientesCtrl', function($scope, $stateParams, Pacientes, $ionicLoading, $ionicActionSheet, $ionicPopup, $state) {
 
   $scope.listaCarregada = false;
+
+  $scope.novo = function () {
+    $state.go('tab.paciente-new');
+  }
 
   $scope.loadData = function() {
     $scope.pacientes = [];

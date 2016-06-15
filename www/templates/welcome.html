@@ -1,5 +1,40 @@
-<ion-content>
+<ion-view name="inicio-tab">
 
-	<img src="img/logo.png" >
+	<ion-content class="welcome" scroll="false">
 
-</ion-content>
+		<!-- <img src="img/logo.png"> -->
+
+		<div class="card">
+			<div class="item item-divider center">Seja bem vindo ao Easydent!</div>
+
+			<form name="loginForm" ng-submit="entrar(login)">
+
+
+				<div class="item">
+
+					<label class="item item-input">
+						<input type="text" name="usuario" placeholder="Usuário" ng-model="login.usuario"	>
+					</label>
+
+					<label class="item item-input">
+						<input type="password" name="senha" placeholder="Senha" ng-model="login.senha" required>
+					</label>
+
+					<input type="submit" value="Entrar" class="button button-block button-balanced" ng-click="entrar(login)">
+					</input>
+
+					<p class="text-center">
+						<a href="#/esqueci-senha">Esqueci a senha</a>
+					</p>
+
+				</div>
+
+				<div class="item item-divider">
+					<p class="text-center">
+						Não possui uma conta? <a href="#/novo-usuario">Cadastre-se</a>
+					</p>
+				</div>
+
+	</ion-content>
+
+</ion-view>

@@ -12,35 +12,34 @@
 
   <ion-content>
 
-    <div class="list">
-      <label class="item item-input item-stacked-label">
-        <span class="input-label">Código</span>
-        <input type="text" readonly="readonly" ng-model="paciente.id">
-      </label>
-      <label class="item item-input item-stacked-label">
+    <div class="list list-inset">
+      <div ng-if="paciente.id">
+        <label class="item item-input item-label">
+          <span class="input-label">Código</span>
+          <input type="text" ng-model="paciente.id">
+        </label>
+      </div>
+      <label class="item item-input item-label">
         <span class="input-label">Nome</span>
         <input type="text" ng-model="paciente.nome" placeholder="Nome do paciente">
       </label>
-      <label class="item item-input item-stacked-label">
+      <label class="item item-input item-label">
         <span class="input-label">Celular</span>
         <input type="tel" ui-mask="(99) 9999-9999?9" ng-model="paciente.celular">
       </label>
-      <label class="item item-input item-stacked-label">
+      <label class="item item-input item-label">
         <span class="input-label">Telefone</span>
-        <input type="tel" ui-mask="(99) 9999-9999?9" ng-model="paciente.telefone" >
+        <input type="tel" ui-mask="(99) 9999-9999?9" ng-model="paciente.telefone">
       </label>
-      <label class="item item-input item-stacked-label">
+      <label class="item item-input item-label">
         <span class="input-label">E-mail</span>
         <input type="email" ng-model="paciente.email" placeholder="Informe o e-mail">
       </label>
-      <label class="item item-input item-stacked-label">
-        <span class="input-label">Data de Nascimento</span>
+      <label class="item item-input item-label">
+        <span class="input-label">Dt. Nasc.</span>
         <input type="date" ng-model="paciente.dataNascimento" placeholder="Informe a data de nascimento">
       </label>
-
     </div>
-
-    <button class="button button-full button-balanced" ng-click="salvar()">Salvar</button>
 
   </ion-content>
 

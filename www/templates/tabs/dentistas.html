@@ -1,16 +1,27 @@
-<ion-view view-title="Dentistas">
+<ion-view view-title="Dentistas" ng-controller="DentistasCtrl">
 
-  <ion-nav-buttons side="primary">
-      <button class="button">+ Novo</button> 
+  <ion-nav-buttons side="right">
+    <button class="button" ng-click="novo()">Novo</button>
   </ion-nav-buttons>
 
   <ion-content>
 
-    <ion-list>
-        <ion-item ng-repeat="dentista in dentistas" href="#tab/dentistas/{{dentista.id}}">
-          {{dentista.nome}}
-        </ion-item>
+    <ion-refresher pulling-text="Atualizando..." on-refresh="refreshData()">
+    </ion-refresher>
+
+    <ion-list ng-if="listaCarregada">
+
+      <ion-item ng-if="!dentistas.length">Nenhum dentista cadastrado</ion-item>
+
+      <ion-item ng-repeat="dentista in dentistas" on-hold="dentistaHold({{dentista}})" href="#tab/dentista/{{dentista.id}}">
+        <i class="icon ion-person"></i> {{dentista.nome}}
+        <span class="item-note">
+          {{dentista.paciente.telefone | tel}}
+        </span>
+      </ion-item>
+
     </ion-list>
 
   </ion-content>
+
 </ion-view>

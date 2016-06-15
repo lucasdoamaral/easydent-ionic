@@ -1,30 +1,44 @@
-<ion-view view-title="Login" ng-controller="LoginCtrl">
-  <ion-content scroll="false" class="padding">
+<ion-view view-title="Easydent" ng-controller="LoginCtrl" hide-nav-bar="true">
 
-    <form name="loginForm" ng-submit="entrar(login)">
+  <ion-content scroll="false" class="padding welcome">
 
-      <label class="item item-input" ng-class="{'has-error-lr': loginForm.usuario.$invalid && loginForm.$submitted, 'valid-lr': loginForm.usuario.$valid && loginForm.$submitted}">
-        <span class="input-label">Usuário</span>
-        <input type="text" name="usuario" ng-model="login.usuario" required>
-      </label>
+    <div class="card padding">
+      <!-- <div class="item item-divider center"></div> -->
 
-      <label class="item item-input" ng-class="{'has-error-lr' : loginForm.senha.$invalid  && loginForm.$submitted, 'valid-lr' : loginForm.senha.$valid  && loginForm.$submitted}">
-        <span class="input-label">Senha</span>
-        <input type="password" name="senha" ng-model="login.senha" required>
-      </label>
+      <img src="img/logo.jpg"></img>
+      <h5>Tenha controle total sobre sua agenda</h5>
 
-      <div class="padding">
-        <input type="submit" value="Entrar" class="button button-block button-balanced" ng-click="entrar(login)" >
-      </input>
+      <form name="loginForm" ng-submit="entrar(login)">
 
-      <p class="text-center">
-        <a href="#/esqueci-senha">Esqueci a senha</a>
-      </p>
+        <div class="item">
+
+          <label class="item item-input">
+            <input type="text" name="usuario" placeholder="E-mail ou usuário" ng-model="login.usuario">
+          </label>
+
+          <label class="item item-input">
+            <input type="password" name="senha" placeholder="Senha" ng-model="login.senha" required>
+          </label>
+
+          <input type="submit" value="Entrar" class="button button-block button-balanced" ng-click="entrar(login)">
+          </input>
+
+          <p class="text-center">
+            <a href="#/esqueci-senha">Esqueci a senha</a>
+          </p>
+
+        </div>
+
+        <div class="item item-divider">
+          <p class="text-center">
+            Não possui uma conta? <a href="#/signup">Cadastre-se</a>
+          </p>
+        </div>
 
     </div>
 
 
-  </form>
+    </form>
 
-</ion-content>
+  </ion-content>
 </ion-view>

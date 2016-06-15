@@ -7,13 +7,13 @@
 // the 2nd parameter is an array of 'requires'
 // 'starter.services' is found in services.js
 // 'starter.controllers' is found in controllers.js
-angular.module('easydent', ['ionic', 
-  'easydent.controllers', 'easydent.services', 'easydent.directives', 
-  'ui.rCalendar', 'ui.utils', 'ngMessages'])
+angular.module('easydent', ['ionic',
+  'easydent.controllers', 'easydent.services', 'easydent.directives',
+  'ui.rCalendar', 'ui.mask', 'ngMessages'])
 
 .run(function($ionicPlatform, $rootScope, AuthService) {
 
-  // Verificações para ajustes visuais do teclado e barra de status  
+  // Verificações para ajustes visuais do teclado e barra de status
   $ionicPlatform.ready(function() {
     if (window.cordova && window.cordova.plugins && window.cordova.plugins.Keyboard) {
       cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
@@ -48,6 +48,11 @@ angular.module('easydent', ['ionic',
   .state('welcome', {
     url: '/welcome',
     templateUrl: 'templates/welcome.html'
+  })
+
+  .state('signup', {
+    url: '/signup',
+    templateUrl: 'templates/login/signup.html'
   })
 
   .state('esqueci-senha', {
@@ -183,7 +188,7 @@ angular.module('easydent', ['ionic',
     }
 
     if (!AuthService.isAuthenticated()) {
-      if (next.name !== 'login') {
+      if (next.name !== 'login' && next.name !== 'signup') {
         event.preventDefault();
         $state.go('login');
       }
