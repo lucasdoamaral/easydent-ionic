@@ -4,7 +4,11 @@
   The FriendsCtrl pulls data from the Friends service (service.js)
   The Friends service returns an array of friend data
 -->
-<ion-view ng-controller="PacienteDetailCtrl">
+<ion-view view-title="" ng-controller="PacienteDetailCtrl">
+
+  <ion-nav-buttons side="right">
+    <button class="button" ng-click="salvar()">Salvar</button>
+  </ion-nav-buttons>
 
   <ion-content>
 
@@ -18,12 +22,12 @@
         <input type="text" ng-model="paciente.nome" placeholder="Nome do paciente">
       </label>
       <label class="item item-input item-stacked-label">
-        <span class="input-label">Telefone</span>
-        <input type="tel" ui-mask="(99) 9999-9999?9" ng-model="paciente.telefone" >
-      </label>
-      <label class="item item-input item-stacked-label">
         <span class="input-label">Celular</span>
         <input type="tel" ui-mask="(99) 9999-9999?9" ng-model="paciente.celular">
+      </label>
+      <label class="item item-input item-stacked-label">
+        <span class="input-label">Telefone</span>
+        <input type="tel" ui-mask="(99) 9999-9999?9" ng-model="paciente.telefone" >
       </label>
       <label class="item item-input item-stacked-label">
         <span class="input-label">E-mail</span>

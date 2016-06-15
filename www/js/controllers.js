@@ -220,7 +220,12 @@ angular.module('easydent.controllers', [])
 
 })
 
-.controller('HomeCtrl', function() {
+.controller('HomeCtrl', function($scope, AuthService, $state) {
+
+  $scope.sair = function () {
+    AuthService.logout();
+    $state.go('login');
+  }
 
 })
 
