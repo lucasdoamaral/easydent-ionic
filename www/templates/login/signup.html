@@ -1,0 +1,66 @@
+<ion-view view-title="Login" ng-controller="LoginCtrl" hide-nav-bar="true">
+
+  <ion-content class="padding signup">
+
+    <div class="card">
+
+      <div style="text-align: center">
+        <img src="img/logo.jpg" width="100px" class="padding"></img>
+        <h4>Cadastre-se e conheça</h4>
+      </div>
+
+      <form name="signupForm" ng-submit="criarUsuario(novoUsuario, novoEstabelecimento)">
+
+        <div class="item">
+
+          <label class="item item-input item-stacked-label">
+            <span class="input-label">Nome</span>
+            <input type="text" ng-model="novoUsuario.nome" placeholder="Informe o seu nome completo">
+          </label>
+          <label class="item item-input item-stacked-label">
+            <span class="input-label">E-mail</span>
+            <input type="text" ng-model="novoUsuario.email" placeholder="Informe o seu e-mail">
+          </label>
+          <label class="item item-input item-stacked-label">
+            <span class="input-label">Login</span>
+            <input type="text" ng-model="novoUsuario.login" placeholder="Escolha um nome de usuário">
+          </label>
+          <label class="item item-input item-stacked-label">
+            <span class="input-label">Senha</span>
+            <input type="password" ng-model="novoUsuario.senha" placeholder="Informe uma senha">
+          </label>
+          <label class="item item-input item-stacked-label">
+            <span class="input-label">Estabelecimento</span>
+            <input type="text" ng-model="novoEstabelecimento.nome" placeholder="Nome da clínica ou consultório">
+          </label>
+          <label class="item item-input item-stacked-label">
+            <span class="input-label">CNPJ (opcional)</span>
+            <input type="text" ng-model="novoEstabelecimento.cnpj" ui-mask="99.999.999/9999-99">
+          </label>
+          <label class="item item-input item-select">
+            <span class="input-label">Função</span>
+            <select class="item-select" ng-model="novoUsuario.fgTipoUsuario">
+              <option value="4" selected>Gerente</option>
+              <option value="3">Dentista</option>
+              <option value="2">Secretário(a)</option>
+            </select>
+          </label>
+
+          <input type="submit" value="Cadastrar" class="button button-block button-balanced">
+          </input>
+
+        </div>
+
+        <div class="item item-divider">
+          <p class="text-center">
+            Já está cadastrado? <a href="#/login">Entre aqui</a>
+          </p>
+        </div>
+
+    </div>
+
+
+    </form>
+
+  </ion-content>
+</ion-view>
