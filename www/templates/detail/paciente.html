@@ -13,10 +13,10 @@
   <ion-content>
 
     <div class="list list-inset">
-      <div ng-if="paciente.id">
+      <div ng-if="paciente.codigo">
         <label class="item item-input item-label">
           <span class="input-label">Código</span>
-          <input type="text" ng-model="paciente.id">
+          <input type="text" ng-readonly="true" ng-model="paciente.codigo">
         </label>
       </div>
       <label class="item item-input item-label">

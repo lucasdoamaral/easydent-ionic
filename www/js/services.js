@@ -74,10 +74,15 @@ angular.module('easydent.services', [])
 
   loadUserCredentials();
 
+  var criarUsuario = function(novoUsuario)  {
+    return $http.post(SERVER.url + '/usuarios', novoUsuario);
+  }
+
   return {
     entrar: login,
     logout: logout,
     isAuthorized: isAuthorized,
+    criarUsuario: criarUsuario,
     isAuthenticated: function() {
       return isAuthenticated;
     },

@@ -52,7 +52,8 @@ angular.module('easydent', ['ionic',
 
   .state('signup', {
     url: '/signup',
-    templateUrl: 'templates/login/signup.html'
+    templateUrl: 'templates/login/signup.html',
+    controller: 'SignupCtrl'
   })
 
   .state('esqueci-senha', {
