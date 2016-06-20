@@ -48,17 +48,21 @@ angular.module('easydent.services', [])
 
   var login = function(name, pw) {
     var authorization = "Basic " + Base64.encode(name + ":" + pw);
-    return $http.get(URL_LOGIN, {
-      headers: {
-        "Authorization": authorization
-      }
-    }).then(
-      function(response) {
-        storeUserCredentials(response.data);
-      },
-      function(error) {
-        destroyUserCredentials();
-      })
+    return $q(function(resolve, reject) {
+      $http.get(URL_LOGIN, {
+        headers: {
+          "Authorization": authorization
+        }
+      }).then(
+        function(response) {
+          storeUserCredentials(response.data);
+          resolve('Login sucessful.');
+        },
+        function(error) {
+          destroyUserCredentials();
+          reject(error.status);
+        })
+    });
   };
 
   var logout = function() {
@@ -74,15 +78,10 @@ angular.module('easydent.services', [])
 
   loadUserCredentials();
 
-  var criarUsuario = function(novoUsuario)  {
-    return $http.post(SERVER.url + '/usuarios', novoUsuario);
-  }
-
   return {
     entrar: login,
     logout: logout,
     isAuthorized: isAuthorized,
-    criarUsuario: criarUsuario,
     isAuthenticated: function() {
       return isAuthenticated;
     },
@@ -93,6 +92,20 @@ angular.module('easydent.services', [])
       return role;
     }
   };
+})
+
+.service('LoginService', function() {
+
+})
+
+.service('UsuarioService', function($http, SERVER) {
+
+  return {
+    criarUsuario: function(novoUsuario) {
+      return $http.post(SERVER.url + '/usuarios', novoUsuario);
+    }
+  }
+
 })
 
 .factory('Base64', function() {
@@ -211,12 +224,6 @@ angular.module('easydent.services', [])
 
 })
 
-.service('Login', function($http) {
-  return {
-
-  }
-})
-
 .service('Dentistas', function($http, $rootScope, $stateParams, SERVER) {
   return {
     todos: function() {
@@ -246,6 +253,15 @@ angular.module('easydent.services', [])
     todas: function() {
       return $http.get(SERVER.url + '/pendencias')
     }
+  }
+})
+
+.service('CalendarService', function () {
+
+  var dataCalendario;
+
+  return {
+    dataCalendario: dataCalendario,
   }
 })
 

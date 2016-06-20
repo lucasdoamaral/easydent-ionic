@@ -8,8 +8,8 @@ angular.module('easydent.controllers', [])
 
   $scope.$on(AUTH_EVENTS.notAuthorized, function(event) {
     var alertPopup = $ionicPopup.alert({
-      title: 'Unauthorized!',
-      template: 'You are not allowed to access this resource.'
+      title: 'Não Autorizado #HTTP403',
+      template: 'Você não possu permissão para visualizar essa página!'
     });
   });
 
@@ -17,7 +17,7 @@ angular.module('easydent.controllers', [])
     AuthService.logout();
     $state.go('login');
     var alertPopup = $ionicPopup.alert({
-      title: 'Sessão Expirada',
+      title: 'Sessão Expirada #HTTP403',
       template: 'Faça o login novamente'
     });
   });
@@ -28,48 +28,96 @@ angular.module('easydent.controllers', [])
 
 })
 
-.controller('SignupCtrl', function($scope, AuthService) {
+.controller('SignupCtrl', function($scope, UsuarioService, $state, $ionicPopup) {
 
   $scope.novoUsuario = {
-    "fgTipoUsuario": 4, 
+    "fgTipoUsuario": 4,
   };
   $scope.novoEstabelecimento = {};
 
   $scope.criarUsuario = function(novoUsuario, novoEstabelecimento) {
     novoUsuario.estabelecimento = novoEstabelecimento;
-    AuthService.criarUsuario(novoUsuario).then(
+    UsuarioService.criarUsuario(novoUsuario).then(
       function() {
-
+        $state.go('login');
       },
-      function() {
-
+      function(error) {
+        $ionicPopup.alert({
+          title: 'Erro',
+          template: error,
+        });
       });
   }
 
 })
 
-.controller('AgendamentosCtrl', function($scope, Agendamentos) {
+.controller('NovoAgendamentoCtrl', function($scope, Agendamentos, Dentistas, Pacientes, CalendarService) {
 
-  $scope.calendar = {
-    mode: "month",
-    agendamentos: [],
-    step: 15,
-    allDayLabel: "Lembrete",
-    noEventsLabel: "Sem eventos",
-    data: new Date()
+  var dataAgendamento = CalendarService.dataCalendario;
+
+  var listaDentistas = [];
+  var listaPacientes = [];
+
+  var agendamento = {
+    dentista: undefined,
+    paciente: undefined,
+    data: dataAgendamento,
+    duracaoMinutos: 30,
+    diaCompleto: false,
+    agenda: undefined,
   };
 
-  Agendamentos.todos().success(function(response) {
-    $scope.calendar.agendamentos = Agendamentos.converterAgendamentos(response);
-  });
+  $scope.novoAgendamento = agendamento; 
+
+})
+
+.controller('AgendamentosCtrl', function($scope, Agendamentos, Dentistas, CalendarService, $state) {
+
+  var agendamentos = {};
+
+  var calendar = {
+    mode: 'month',
+    step: 15,
+    eventSource: agendamentos,
+    currentDate: new Date(),
+  };
+
+  CalendarService.dataCalendario = calendar.currentDate;
+
+  $scope.novoAgendamento = function() {
+    console.log("novoAgendamento called");
+    $state.go('tab.novoagendamento');
+  }
 
   $scope.changeMode = function(mode) {
     $scope.calendar.mode = mode;
+  };
+  $scope.currentMode = function(mode) {
+    return $scope.calendar.mode == mode;
   }
+  $scope.onEventSelected = function(event) {
+    console.log('Event selected:' + event.startTime + '-' + event.endTime + ',' + event.title);
+  };
+  $scope.onViewTitleChanged = function(title) {
+    $scope.viewTitle = title;
+  };
+  $scope.today = function() {
+    $scope.calendar.currentDate = new Date();
+  };
+  $scope.isToday = function() {
+    var today = new Date(),
+      currentCalendarDate = new Date($scope.calendar.currentDate);
 
-  $scope.hoje = function() {
-    $scope.calendar.data = new Date();
-  }
+    today.setHours(0, 0, 0, 0);
+    currentCalendarDate.setHours(0, 0, 0, 0);
+    return today.getTime() === currentCalendarDate.getTime();
+  };
+
+  $scope.onTimeSelected = function(selectedTime) {
+    console.log('Selected time: ' + selectedTime);
+  };
+
+  $scope.calendar = calendar;
 
 })
 
@@ -78,10 +126,11 @@ angular.module('easydent.controllers', [])
   $scope.listaCarregada = false;
 
   $scope.novo = function() {
-    $state.go('tab.paciente-new');
+    $state.go('tab.novopaciente');
   }
 
   $scope.loadData = function() {
+    $scope.listaCarregada = false;
     $scope.pacientes = [];
     $ionicLoading.show({
       template: '<ion-spinner class="spinner-balanced"></ion-spinner><br />Aguarde'
@@ -157,30 +206,65 @@ angular.module('easydent.controllers', [])
 
 })
 
-.controller('LoginCtrl', function($scope, $state, $ionicPopup, AuthService) {
+.controller('LoginCtrl', function($scope, $state, $ionicPopup, AuthService, $timeout, LoginService) {
 
-    $scope.login = {};
+  $scope.login = {};
+  $scope.hasError = false;
 
-    $scope.entrar = function(data) {
+  var isLogging = false;
+
+  $scope.entrar = function(data) {
+    if (!isLogging) {
+      clearErrorMessage();
       if (data.usuario && data.senha) {
+        isLogging = true;
         AuthService.entrar(data.usuario, data.senha).then(
           function(authenticated) {
+            isLogging = false;
             $state.go('tab.home', {}, {
               reload: true
             });
           },
-          function(err) {
-            $ionicPopup.alert({
-              title: 'Login failed!',
-              template: 'Please check your credentials!'
-            });
-          });
+          function(errorStatus) {
+            isLogging = false;
+            if (errorStatus == 401) {
+              showErrorMessage("Usuário ou senha incorretos");
+            } else {
+              showErrorMessage("Erro ao realizar o login");
+            }
+          }
+        );
+      } else {
+        showErrorMessage("Informe o nome de usuário ou e-mail e a senha");
       }
-    };
-  })
-  .controller('EsqueciSenhaCtrl', function($state) {
+    }
+  };
 
-  })
+  function showErrorMessage(message) {
+    $scope.hasError = true;
+    $scope.errorMessage = message;
+    $timeout(function() {
+      $scope.hasError = false;
+      $scope.errorMessage = undefined;
+    }, 5000);
+  }
+
+  var clearErrorMessage = function() {
+    if ($scope.hasError) {
+      $scope.hasError = false;
+    }
+  };
+  $scope.clearErrorMessage = clearErrorMessage;
+
+})
+
+.controller('EsqueciSenhaCtrl', function($state) {
+
+  return {
+
+  }
+
+})
 
 .controller('PacienteDetailCtrl', function($scope, $stateParams, Pacientes, $ionicLoading, $ionicHistory, $state) {
 

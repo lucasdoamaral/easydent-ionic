@@ -1,0 +1,48 @@
+<ion-view view-title="Novo Agendamento">
+
+  <ion-content>
+    <div class="list">
+      <form name="novoAgendamentoForm">
+
+        <label class="item item-input item-select">
+          <div class="input-label">
+            Paciente
+          </div>
+          <select>
+            <option>Blue</option>
+            <option selected>Green</option>
+            <option>Red</option>
+          </select>
+        </label>
+
+        <label class="item item-input item-select">
+          <div class="input-label">
+            Dentista
+          </div>
+          <select>
+            <option>Blue</option>
+            <option selected>Green</option>
+            <option>Red</option>
+          </select>
+        </label>
+
+        <label class="item item-input">
+          <span class="input-label">Data</span>
+          <input type="date" ng-model="novoAgendamento.data">
+        </label>
+
+        <label class="item item-input">
+          <span class="input-label">Hora</span>
+          <input type="text">
+        </label>
+
+        <label class="item item-input">
+          <span class="input-label">Procedimento</span>
+          <input type="text">
+        </label>
+
+      </form>
+    </div>
+
+  </ion-content>
+</ion-view>

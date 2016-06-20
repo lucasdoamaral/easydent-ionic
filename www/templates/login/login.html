@@ -1,41 +1,31 @@
 <ion-view view-title="Easydent" ng-controller="LoginCtrl" hide-nav-bar="true">
 
-  <ion-content class="padding welcome">
+  <ion-content class="padding welcome" scroll="false">
 
-    <div class="card">
+    <form name="loginForm">
 
-      <img src="img/logo.jpg" class="padding"></img>
+      <h2 class="app-name">Easydent</h2>
       <h5>Tenha controle total sobre sua agenda</h5>
 
-      <form name="loginForm" ng-submit="entrar(login)">
+      <label class="item item-input">
+        <input type="text" name="usuario" placeholder="E-mail ou usuário" ng-model="login.usuario">
+      </label>
 
-        <div class="item">
+      <label class="item item-input">
+        <input type="password" name="senha" placeholder="Senha" ng-model="login.senha" required>
+      </label>
 
-          <label class="item item-input">
-            <input type="text" name="usuario" placeholder="E-mail ou usuário" ng-model="login.usuario">
-          </label>
+      <input type="button" id="login-button" value="Entrar" class="button button-block button-balanced" ng-click="entrar(login)" />
 
-          <label class="item item-input">
-            <input type="password" name="senha" placeholder="Senha" ng-model="login.senha" required>
-          </label>
+      <div class="error-message" ng-show="hasError">{{errorMessage}}</div>
 
-          <input type="submit" value="Entrar" class="button button-block button-balanced" ng-click="entrar(login)">
-          </input>
+      <p class="text-center">
+        <a href="#/esqueci-senha">Esqueci a senha</a>
+      </p>
 
-          <p class="text-center">
-            <a href="#/esqueci-senha">Esqueci a senha</a>
-          </p>
-
-        </div>
-
-        <div class="item item-divider">
-          <p class="text-center">
-            Não possui uma conta? <a href="#/signup">Cadastre-se</a>
-          </p>
-        </div>
-
-    </div>
-
+      <p class="text-center">
+        Não possui uma conta? <a href="#/signup">Cadastre-se</a>
+      </p>
 
     </form>
 

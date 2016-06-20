@@ -9,7 +9,8 @@
 // 'starter.controllers' is found in controllers.js
 angular.module('easydent', ['ionic',
   'easydent.controllers', 'easydent.services', 'easydent.directives',
-  'ui.rCalendar', 'ui.mask', 'ngMessages'])
+  'ui.rCalendar', 'ui.mask', 'ngMessages', 'ngLocale'
+])
 
 .run(function($ionicPlatform, $rootScope, AuthService) {
 
@@ -30,8 +31,8 @@ angular.module('easydent', ['ionic',
 
   $ionicConfigProvider.backButton.text('Voltar');
   // $ionicConfigProvider.tabs.style('striped').position('bottom');
-  //$ionicConfigProvider.tabs.style('standard').position('bottom');
-  //$ionicConfigProvider.navBar.alignTitle('center');
+  $ionicConfigProvider.tabs.style('standard').position('bottom');
+  $ionicConfigProvider.navBar.alignTitle('center');
   //$ionicConfigProvider.spinner.icon('dots');
   // Ionic uses AngularUI Router which uses the concept of states
   // Learn more here: https://github.com/angular-ui/ui-router
@@ -39,7 +40,7 @@ angular.module('easydent', ['ionic',
   // Each state's controller can be found in controllers.js
   $stateProvider
 
-  .state('login', {
+    .state('login', {
     url: '/login',
     templateUrl: 'templates/login/login.html',
     controller: 'LoginCtrl'
@@ -86,9 +87,26 @@ angular.module('easydent', ['ionic',
         templateUrl: 'templates/tabs/pacientes.html',
         controller: 'PacientesCtrl'
       }
-    },
-    data: {
-      requiresLogin: true
+    }
+  })
+
+  .state('tab.novopaciente', {
+    url: '/paciente-new',
+    views: {
+      'tab-pacientes': {
+        templateUrl: 'templates/detail/paciente.html',
+        controller: 'PacienteDetailCtrl'
+      }
+    }
+  })
+
+  .state('tab.paciente-detail', {
+    url: '/pacientes/:pacienteId',
+    views: {
+      'tab-pacientes': {
+        templateUrl: 'templates/detail/paciente.html',
+        controller: 'PacienteDetailCtrl'
+      }
     }
   })
 
@@ -98,6 +116,16 @@ angular.module('easydent', ['ionic',
       'tab-agendamentos': {
         templateUrl: 'templates/tabs/agendamentos.html',
         controller: 'AgendamentosCtrl'
+      }
+    }
+  })
+
+  .state('tab.novoagendamento', {
+    url: '/novo-agendamento',
+    views: {
+      'tab-agendamentos': {
+        templateUrl: 'templates/novo-agendamento.html',
+        controller: 'NovoAgendamentoCtrl'
       }
     }
   })
@@ -132,26 +160,6 @@ angular.module('easydent', ['ionic',
     }
   })
 
-  .state('tab.paciente-detail', {
-    url: '/pacientes/:pacienteId',
-    views: {
-      'tab-pacientes': {
-        templateUrl: 'templates/detail/paciente.html',
-        controller: 'PacienteDetailCtrl'
-      }
-    }
-  })
-
-  .state('tab.paciente-new', {
-    url: '/paciente-new',
-    views: {
-      'tab-pacientes': {
-        templateUrl: 'templates/detail/paciente.html',
-        controller: 'PacienteDetailCtrl'
-      }
-    }
-  })
-
   ;
 
   // if none of the above states are matched, use this as the fallback
@@ -159,9 +167,9 @@ angular.module('easydent', ['ionic',
 
 })
 
-.factory('AuthInterceptor', function ($rootScope, $q, AUTH_EVENTS) {
+.factory('AuthInterceptor', function($rootScope, $q, AUTH_EVENTS) {
   return {
-    responseError: function (response) {
+    responseError: function(response) {
       //response.status = response.status == -1? 401:response.status;
       $rootScope.$broadcast({
         401: AUTH_EVENTS.notAuthenticated,
@@ -172,26 +180,32 @@ angular.module('easydent', ['ionic',
   };
 })
 
-.config(function ($httpProvider) {
+.config(function($httpProvider) {
   $httpProvider.interceptors.push('AuthInterceptor');
 })
 
-.run(function ($rootScope, $state, AuthService, AUTH_EVENTS) {
-  $rootScope.$on('$stateChangeStart', function (event,next, nextParams, fromState) {
+.run(function($rootScope, $state, AuthService, AUTH_EVENTS) {
+  $rootScope.$on('$stateChangeStart', function(event, next, nextParams, fromState) {
 
-    if ('data' in next && 'authorizedRoles' in next.data) {
-      var authorizedRoles = next.data.authorizedRoles;
-      if (!AuthService.isAuthorized(authorizedRoles)) {
-        event.preventDefault();
-        $state.go($state.current, {}, {reload: true});
-        $rootScope.$broadcast(AUTH_EVENTS.notAuthorized);
+    if (!('data' in next) || (!'authorizedRoles' in next.data)) {
+      console.warn("No permission defined for state [" + next.name + "]");
+    } else {
+      if ('data' in next && 'authorizedRoles' in next.data) {
+        var authorizedRoles = next.data.authorizedRoles;
+        if (!AuthService.isAuthorized(authorizedRoles)) {
+          event.preventDefault();
+          $state.go($state.current, {}, {
+            reload: true
+          });
+          $rootScope.$broadcast(AUTH_EVENTS.notAuthorized);
+        }
       }
-    }
 
-    if (!AuthService.isAuthenticated()) {
-      if (next.name !== 'login' && next.name !== 'signup') {
-        event.preventDefault();
-        $state.go('login');
+      if (!AuthService.isAuthenticated()) {
+        if (next.name !== 'login' && next.name !== 'signup') {
+          event.preventDefault();
+          $state.go('login');
+        }
       }
     }
   });
