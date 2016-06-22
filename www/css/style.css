@@ -39,17 +39,27 @@ label.item.valid-lr {
 }
 .welcome input {
   text-align: center;
+  background-blend-mode: color;
 }
 
 /* login.html */
 
 h2.app-name {
-  margin-top: 10px;
+  padding-top: 30px;
   color: #4cb14c;
   font-weight: bold;
-  /*text-shadow: 2px 2px 1px black;*/
   font-size: 50px;
-  /*font-family: cursive;*/
+}
+
+.welcome a, .signup a{
+  color: white;
+  text-decoration: initial;
+  font-weight: bold
+}
+
+#forgot-password-button {
+  font-weight: bold;
+  padding: 0px 25px;
 }
 
 /** index.html **/
@@ -97,7 +107,8 @@ input[disabled] {
   text-align: center;
 }
 .calendar-bar button {
-  /*background-color: white;*/
   font-weight: bold;
-  width: 65px;
+/*  width: 40px !important;
+min-width: 0px !important;*/
 }
+

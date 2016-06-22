@@ -9,7 +9,7 @@
 // 'starter.controllers' is found in controllers.js
 angular.module('easydent', ['ionic',
   'easydent.controllers', 'easydent.services', 'easydent.directives',
-  'ui.rCalendar', 'ui.mask', 'ngMessages', 'ngLocale'
+  'ui.rCalendar', 'ui.mask', 'ngMessages', 'ngLocale', 'angular.filter'
 ])
 
 .run(function($ionicPlatform, $rootScope, AuthService) {

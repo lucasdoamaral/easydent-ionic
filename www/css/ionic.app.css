@@ -3007,9 +3007,10 @@ time, mark, audio, video {
   margin: 0;
   padding: 0;
   border: 0;
-  vertical-align: baseline;
+  /* vertical-align: baseline; */
   font: inherit;
-  font-size: 100%; }
+  font-size: 100%;
+  }
 
 ol, ul {
   list-style: none; }
@@ -8863,10 +8864,11 @@ progress {
 
 .button-small {
   padding: 2px 4px 1px;
-  min-width: 28px;
+  /* min-width: 28px; */
   min-height: 30px;
   font-size: 12px;
-  line-height: 26px; }
+  line-height: 26px;
+  }
   .button-small .icon:before, .button-small.icon:before, .button-small.icon-left:before, .button-small.icon-right:before {
     font-size: 16px;
     line-height: 19px;
@@ -9026,13 +9028,14 @@ a.button {
   flex: 1;
   display: block;
   overflow: hidden;
-  padding: 0 16px;
+  /* padding: 0 13px; */
   width: 0;
   border-width: 1px 0px 1px 1px;
   border-radius: 0;
   text-align: center;
   text-overflow: ellipsis;
-  white-space: nowrap; }
+  white-space: nowrap;
+  }
   .button-bar > .button:before,
   .button-bar > .button .icon:before {
     line-height: 44px; }

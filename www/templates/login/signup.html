@@ -1,66 +1,72 @@
 <ion-view view-title="Login" ng-controller="LoginCtrl" hide-nav-bar="true">
 
-  <ion-content class="padding signup">
+  <ion-content class="signup padding" scroll="false">
 
-    <div class="card">
+    <form name="signupForm" ng-submit="criarUsuario(novoUsuario, novoEstabelecimento)">
 
-      <div style="text-align: center">
-        <img src="img/logo.jpg" width="100px" class="padding"></img>
-        <h4>Cadastre-se e conheça</h4>
-      </div>
+      <h2 class="app-name">Easydent</h2>
+      <h5>Tenha controle total sobre sua agenda</h5>
 
-      <form name="signupForm" ng-submit="criarUsuario(novoUsuario, novoEstabelecimento)">
+      <div class="lista">
 
-        <div class="item">
+        <label class="item item-input item-label">
+          <!-- <span class="input-label">Nome</span> -->
+          <input type="text" ng-model="novoUsuario.nome" placeholder="Seu nome completo">
+        </label>
+        <label class="item item-input item-label">
+          <!-- <span class="input-label">E-mail</span> -->
+          <input type="text" ng-model="novoUsuario.email" placeholder="Seu e-mail">
+        </label>
+<!--         <label class="item item-input item-label">
+          <span class="input-label">Login</span>
+          <input type="text" ng-model="novoUsuario.login" placeholder="Escolha um nome de usuário">
+        </label>
+      -->        
+      <label class="item item-input item-label">
+        <!-- <span class="input-label">Senha</span> -->
+        <input type="password" ng-model="novoUsuario.senha" placeholder="Informe uma senha">
+      </label>
+      <label class="item item-input item-label">
+        <!-- <span class="input-label">Senha</span> -->
+        <input type="password" ng-model="novoUsuario.senha" placeholder="Informe a senha novamente">
+      </label>
+<!--       <label class="item item-input item-label">
+        <span class="input-label">Estabelecimento</span>
+        <input type="text" ng-model="novoEstabelecimento.nome" placeholder="Nome da clínica ou consultório">
+      </label>
+ --><!--       <label class="item item-input item-label">
+        <span class="input-label">CNPJ (opcional)</span>
+        <input type="text" ng-model="novoEstabelecimento.cnpj" ui-mask="99.999.999/9999-99">
+      </label>
+    -->      
+<!--     <label class="item item-input item-select">
+      <span class="input-label">Função</span>
+      <select class="item-select" ng-model="novoUsuario.fgTipoUsuario">
+        <option value="4" selected="selected">Gerente</option>
+        <option value="3">Dentista</option>
+        <option value="2">Secretário(a)</option>
+      </select>
+    </label>
+  -->
+  <input type="submit" value="Cadastrar-se" class="button button-block button-balanced">
+</input>
 
-          <label class="item item-input item-stacked-label">
-            <span class="input-label">Nome</span>
-            <input type="text" ng-model="novoUsuario.nome" placeholder="Informe o seu nome completo">
-          </label>
-          <label class="item item-input item-stacked-label">
-            <span class="input-label">E-mail</span>
-            <input type="text" ng-model="novoUsuario.email" placeholder="Informe o seu e-mail">
-          </label>
-          <label class="item item-input item-stacked-label">
-            <span class="input-label">Login</span>
-            <input type="text" ng-model="novoUsuario.login" placeholder="Escolha um nome de usuário">
-          </label>
-          <label class="item item-input item-stacked-label">
-            <span class="input-label">Senha</span>
-            <input type="password" ng-model="novoUsuario.senha" placeholder="Informe uma senha">
-          </label>
-          <label class="item item-input item-stacked-label">
-            <span class="input-label">Estabelecimento</span>
-            <input type="text" ng-model="novoEstabelecimento.nome" placeholder="Nome da clínica ou consultório">
-          </label>
-          <label class="item item-input item-stacked-label">
-            <span class="input-label">CNPJ (opcional)</span>
-            <input type="text" ng-model="novoEstabelecimento.cnpj" ui-mask="99.999.999/9999-99">
-          </label>
-          <label class="item item-input item-select">
-            <span class="input-label">Função</span>
-            <select class="item-select" ng-model="novoUsuario.fgTipoUsuario">
-              <option value="4" selected="selected">Gerente</option>
-              <option value="3">Dentista</option>
-              <option value="2">Secretário(a)</option>
-            </select>
-          </label>
+</div>
 
-          <input type="submit" value="Cadastrar" class="button button-block button-balanced">
-          </input>
+</form>
 
-        </div>
+<!-- <ion-footer-bar class="bar-balanced"> -->
+<!-- <div style="width: 100%; line-height: 34px;"> -->
+<!-- Não possui uma conta?&nbsp<a href="#/signup"> Cadastre-se</a> -->
+<!-- </div> -->
+<!-- </ion-footer-bar> -->
 
-        <div class="item item-divider">
-          <p class="text-center">
-            Já está cadastrado? <a href="#/login">Entre aqui</a>
-          </p>
-        </div>
-
-    </div>
+<div class="bar bar-footer bar-balanced">
+  <div style="width: 100%; text-align: center; line-height: 34px;">
+    Já possui uma conta?&nbsp<a href="#/login">Entre aqui</a>
+  </div>
+</div>
 
 
-    </form>
-
-  </ion-content>
+</ion-content>
 </ion-view>

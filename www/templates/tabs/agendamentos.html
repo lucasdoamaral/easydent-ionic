@@ -7,7 +7,7 @@
 	<ion-content scroll="false" class="main-content">
 
 		<div class="calendar-bar padding">
-			<div class="button-bar" style="width: 268px; display: -webkit-inline-box;">
+			<div class="button-bar" style="width: 230px; display: -webkit-inline-box;">
 				<button class="button button-balanced button-small" ng-disabled="currentMode('month')" ng-click="changeMode('month')">Mês</button>
 				<button class="button button-balanced button-small" ng-disabled="currentMode('week')" ng-click="changeMode('week')">Semana</button>
 				<button class="button button-balanced button-small" ng-disabled="currentMode('day')" ng-click="changeMode('day')">Dia</button>
@@ -16,7 +16,7 @@
 		</div>
 
 		<calendar ng-model="calendar.currentDate" calendar-mode="calendar.mode" event-source="calendar.eventSource" range-changed="reloadSource(startTime, endTime)" event-selected="onEventSelected(event)" title-changed="onViewTitleChanged(title)" time-selected="onTimeSelected(selectedTime)"
-						step="15" format-day="dd" format-day-title="dd/MM/yyyy" format-week-title="MMMM 'de' yyyy" format-month-title="MMMM 'de' yyyy" no-events-label="Nenhum agendamento" all-day-label="~"></calendar>
+		step="15" format-day="dd" format-day-title="dd/MM/yyyy" format-week-title="MMMM 'de' yyyy" format-month-title="MMMM 'de' yyyy" no-events-label="Nenhum agendamento" all-day-label="~"></calendar>
 
 	</ion-content>
 

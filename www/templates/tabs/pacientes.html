@@ -9,18 +9,23 @@
     <ion-refresher pulling-text="Atualizando..." on-refresh="refreshData()">
     </ion-refresher>
 
+    <ion-item ng-if="!listaCarregada" style="text-align: center"> 
+      <ion-spinner></ion-spinner><br />
+      Carregando pacientes
+    </ion-item>
+
     <ion-item ng-if="!pacientes.length && listaCarregada">Nenhum paciente cadastrado</ion-item>
 
     <ion-item ng-repeat="paciente in pacientes" on-hold="pacienteHold({{paciente}})" href="#tab/pacientes/{{paciente.id}}">
       <i class="icon ion-person"></i> {{paciente.nome}}
       <span class="item-note">
-          {{paciente.celular || paciente.telefone | tel}}
-        </span>
+        {{paciente.celular || paciente.telefone | tel}}
+      </span>
     </ion-item>
 
     <!-- <ion-infinite-scroll on-infinite="loadMoreData()" distance="10%" ng-if="hasMoreData()">
-    </ion-infinite-scroll> -->
+  </ion-infinite-scroll> -->
 
-  </ion-content>
+</ion-content>
 
 </ion-view>

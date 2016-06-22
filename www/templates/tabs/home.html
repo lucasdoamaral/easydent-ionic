@@ -5,7 +5,47 @@
 	</ion-nav-buttons>
 
 	<ion-content>
-		HOME
-	</ion-content>
 
+		<!-- Saudação -->
+
+		<div class="card">
+			<div class="item item-text-wrap">Seja bem vindo, {{username | first}}</div>
+		</div>
+
+		<!-- Loading Consultas -->
+		<div class="card" ng-if="!carregouUltimosAgendamentos || !carregouAgendamentos">
+			<div class="item" style="text-align: center">
+				<ion-spinner></ion-spinner><br />
+				Carregando últimos agendamentos
+			</div>
+		</div>
+
+		<!-- Últimos Agendamentos -->
+		<div class="card" ng-if="carregouUltimosAgendamentos && ultimosAgendamentos.length">
+			<div ng-repeat="(dataString, agendamentos) in ultimosAgendamentos | map: toLocaleDate | groupBy: 'dataString'">
+				<div class="item item-divider card-title">Últimas consultas em {{dataString}}</div>
+				<div ng-repeat="agendamento in agendamentos" class="item item-text-wrap">
+					{{agendamento.data | date : 'HH:mm'}} as {{agendamento.dataFinal | date : 'HH:mm'}} {{agendamento.paciente.nome}} ({{agendamento.procedimento}})
+				</div>
+			</div>
+		</div>
+
+		
+		<!-- Próximos Agendamentos -->
+		<div class="card" ng-if="!carregouAgendamentos && proximosAgendamentos.length">
+			<div class="item" style="text-align: center">
+				<ion-spinner></ion-spinner><br />
+				Carregando próximos agendamentos
+			</div>
+		</div>
+		<div class="card" ng-if="carregouAgendamentos">
+			<div ng-repeat="(dataString, agendamentos) in proximosAgendamentos | map: toLocaleDate | groupBy: 'dataString'">
+				<div class="item item-divider card-title">Próximas consultas em {{dataString}}</div>
+				<div ng-repeat="agendamento in agendamentos" class="item item-text-wrap">
+					{{agendamento.data | date : 'HH:mm'}} as {{agendamento.dataFinal | date : 'HH:mm'}} {{agendamento.paciente.nome}} ({{agendamento.procedimento}})
+				</div>
+			</div>
+		</div>
+
+	</ion-content>
 </ion-view>

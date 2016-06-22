@@ -8,26 +8,32 @@
       <h5>Tenha controle total sobre sua agenda</h5>
 
       <label class="item item-input">
-        <input type="text" name="usuario" placeholder="E-mail ou usuário" ng-model="login.usuario">
+        <input type="text" name="usuario" placeholder="Informe seu e-mail cadastrado" ng-model="login.usuario" required>
       </label>
 
       <label class="item item-input">
-        <input type="password" name="senha" placeholder="Senha" ng-model="login.senha" required>
+        <input type="password" name="senha" placeholder="Informe a sua senha" ng-model="login.senha" required>
       </label>
 
       <input type="button" id="login-button" value="Entrar" class="button button-block button-balanced" ng-click="entrar(login)" />
+      <input type="button" id="forgot-password-button" value="Esqueceu sua senha?" class="button button-small button-stable" ng-click="entrar(login)" />
 
       <div class="error-message" ng-show="hasError">{{errorMessage}}</div>
 
-      <p class="text-center">
+<!--       <p class="text-center">
         <a href="#/esqueci-senha">Esqueci a senha</a>
       </p>
+    -->
+    <p class="text-center">
+    </p>
 
-      <p class="text-center">
-        Não possui uma conta? <a href="#/signup">Cadastre-se</a>
-      </p>
+  </form>
 
-    </form>
+  <div class="bar bar-footer bar-balanced">
+    <div style="width: 100%; line-height: 34px;">
+      Não possui uma conta?&nbsp<a href="#/signup"> Cadastre-se</a>
+    </div>
+  </div>
 
-  </ion-content>
+</ion-content>
 </ion-view>
