@@ -90,6 +90,8 @@
 
  	var dataAgendamento = CalendarService.dataCalendario;
 
+	console.log('Teste VS Code');
+
  	var listaDentistas = [];
  	var listaPacientes = [];
  	var listaHorariosDisponiveis = [];
