@@ -1,4 +1,4 @@
-<ion-view view-title="Dentistas" ng-controller="DentistasCtrl">
+<ion-view view-title="Dentistas">
 
   <ion-nav-buttons side="right">
     <button class="button" ng-click="novo()">Novo</button>
@@ -6,18 +6,25 @@
 
   <ion-content>
 
-    <ion-refresher pulling-text="Atualizando..." on-refresh="refreshData()">
-    </ion-refresher>
+    <ion-refresher pulling-text="Atualizando..." on-refresh="carregarDentistas()"></ion-refresher>
 
-    <ion-list ng-if="listaCarregada">
+    <ion-list>
 
-      <ion-item ng-if="!dentistas.length">Nenhum dentista cadastrado</ion-item>
+      <ion-item ng-if="!listaCarregadaComErros && !listaCarregadaSemErros" style="text-align: center"> 
+        <ion-spinner class="spinner-balanced"></ion-spinner><br />
+        Carregando dentistas
+      </ion-item>
 
-      <ion-item ng-repeat="dentista in dentistas" on-hold="dentistaHold({{dentista}})" href="#tab/dentista/{{dentista.id}}">
+      <ion-item class="item-icon-left" ng-if="listaCarregadaComErros">
+        <i class="icon ion-sad-outline"></i> {{mensagemErro}}
+      </ion-item>
+
+      <ion-item ng-if="listaCarregadaSemErros && !listaDentistas.length">
+        Nenhum dentista cadastrado
+      </ion-item>
+
+      <ion-item ng-repeat="dentista in listaDentistas" class="item-icon-left" on-hold="exibirMenu({{dentista}})" href="#tab/dentistas/edit/{{dentista.id}}">
         <i class="icon ion-person"></i> {{dentista.nome}}
-        <span class="item-note">
-          {{dentista.paciente.telefone | tel}}
-        </span>
       </ion-item>
 
     </ion-list>

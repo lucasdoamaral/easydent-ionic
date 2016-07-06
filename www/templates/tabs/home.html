@@ -1,51 +1,80 @@
 <ion-view view-title="Início" name="inicio-tab">
 
-	<ion-nav-buttons side="right">
-		<button class="button icon-left ion-log-out" ng-click="sair()">Sair</button>
-	</ion-nav-buttons>
-
 	<ion-content>
 
-		<!-- Saudação -->
+		<div class="list">
 
-		<div class="card">
-			<div class="item item-text-wrap">Seja bem vindo, {{username | first}}</div>
-		</div>
-
-		<!-- Loading Consultas -->
-		<div class="card" ng-if="!carregouUltimosAgendamentos || !carregouAgendamentos">
-			<div class="item" style="text-align: center">
-				<ion-spinner></ion-spinner><br />
-				Carregando últimos agendamentos
+			<!-- Saudação -->
+			<div class="item item-text-wrap">
+				<h2>Seja bem vindo, {{username}}</h2>
 			</div>
-		</div>
 
-		<!-- Últimos Agendamentos -->
-		<div class="card" ng-if="carregouUltimosAgendamentos && ultimosAgendamentos.length">
-			<div ng-repeat="(dataString, agendamentos) in ultimosAgendamentos | map: toLocaleDate | groupBy: 'dataString'">
-				<div class="item item-divider card-title">Últimas consultas em {{dataString}}</div>
-				<div ng-repeat="agendamento in agendamentos" class="item item-text-wrap">
-					{{agendamento.data | date : 'HH:mm'}} as {{agendamento.dataFinal | date : 'HH:mm'}} {{agendamento.paciente.nome}} ({{agendamento.procedimento}})
+			<!-- Loading Consultas -->
+			<div ng-if="!carregouUltimosAgendamentos || !carregouAgendamentos">
+				<div class="item" style="text-align: center">
+					<ion-spinner></ion-spinner><br />
+					Carregando agendamentos
 				</div>
 			</div>
-		</div>
 
-		
-		<!-- Próximos Agendamentos -->
-		<div class="card" ng-if="!carregouAgendamentos && proximosAgendamentos.length">
-			<div class="item" style="text-align: center">
-				<ion-spinner></ion-spinner><br />
-				Carregando próximos agendamentos
-			</div>
-		</div>
-		<div class="card" ng-if="carregouAgendamentos">
-			<div ng-repeat="(dataString, agendamentos) in proximosAgendamentos | map: toLocaleDate | groupBy: 'dataString'">
-				<div class="item item-divider card-title">Próximas consultas em {{dataString}}</div>
-				<div ng-repeat="agendamento in agendamentos" class="item item-text-wrap">
-					{{agendamento.data | date : 'HH:mm'}} as {{agendamento.dataFinal | date : 'HH:mm'}} {{agendamento.paciente.nome}} ({{agendamento.procedimento}})
+			<!-- Últimos Agendamentos -->
+			<div ng-click="toggleUltimasConsultas()" ng-if="!showUltimasConsultas && ultimosAgendamentos.length" class="item item-divider">Últimas consultas</div>
+			<div ng-if="carregouUltimosAgendamentos && ultimosAgendamentos.length">
+				<div ng-if="showUltimasConsultas" ng-repeat="(dataString, agendamentos) in ultimosAgendamentos | map: toLocaleDate | groupBy: 'dataString'">
+					<div ng-click="toggleUltimasConsultas()" class="item item-divider">Últimas consultas em {{dataString}}</div>
+					<div ng-repeat="agendamento in agendamentos" class="item item-text-wrap agendamento-antigo">
+						<h3>{{agendamento.data | date : 'HH:mm'}} as {{agendamento.dataFinal | date : 'HH:mm'}}</h3> 
+						<h4>Dr. {{agendamento.dentista.nome}}</h4>
+						<h3>{{agendamento.paciente.nome}} - {{agendamento.procedimento}}</h3>
+						<div class="button-bar">
+							<a class="button button-balanced button-small" ng-click="confirmarComparecimento(agendamento)">
+								<i class="ion-android-done"></i> 
+								Atendido
+							</a>
+							<a class="button button-energized button-small">
+								<!-- <i class="ion-android-close"></i>  -->
+								Cancelada
+							</a>
+							<a class="button button-assertive button-small">
+								Pac. faltou
+							</a>
+						</div>
+					</div>
 				</div>
 			</div>
+
+
+			<!-- Próximos Agendamentos -->
+			<div ng-click="toggleProximasConsultas()" ng-if="!showProximasConsultas && proximosAgendamentos.length" class="item item-divider">Próximas consultas</div>
+			<div ng-if="!carregouAgendamentos && proximosAgendamentos.length">
+				<div class="item" style="text-align: center">
+					<ion-spinner></ion-spinner><br />
+					Carregando próximos agendamentos
+				</div>
+			</div>
+			<div ng-if="carregouAgendamentos && proximosAgendamentos.length">
+				<div ng-if="showProximasConsultas" ng-repeat="(dataString, agendamentos) in proximosAgendamentos | map: toLocaleDate | groupBy: 'dataString'">
+					<div ng-click="toggleProximasConsultas()" class="item item-divider card-title">Próximas consultas em {{dataString}}</div>
+					<div ng-repeat="agendamento in agendamentos" >
+						<div class="item item-text-wrap">
+							<h3>{{agendamento.data | date : 'HH:mm'}} as {{agendamento.dataFinal | date : 'HH:mm'}}</h3> 
+							<h4>Dr. {{agendamento.dentista.nome}}</h4>
+							<h3>{{agendamento.paciente.nome}} - {{agendamento.procedimento}}</h3>
+						</div>
+					</div>
+				</div>
+			</p>
+
 		</div>
 
-	</ion-content>
+		<div ng-if="carregouAgendamentos && !proximosAgendamentos.length">
+			<div class="item item-divider">Próximas consultas</div>
+			<div class="item item-text-wrap item-icon-left" >
+				<i class="icon ion-sad-outline"></i> Você não possui agendamentos 
+			</div>
+		</div>
+
+	</div>
+
+</ion-content>
 </ion-view>

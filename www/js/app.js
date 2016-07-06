@@ -1,18 +1,11 @@
 "use strict";
 
-// Ionic Starter App
-
-// angular.module is a global place for creating, registering and retrieving Angular modules
-// 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
-// the 2nd parameter is an array of 'requires'
-// 'starter.services' is found in services.js
-// 'starter.controllers' is found in controllers.js
 angular.module('easydent', ['ionic',
   'easydent.controllers', 'easydent.services', 'easydent.directives',
-  'ui.rCalendar', 'ui.mask', 'ngMessages', 'ngLocale', 'angular.filter'
-])
+  'ui.rCalendar', 'ui.mask', 'ngMessages', 'ngLocale', 'angular.filter', 'ionic-datepicker', 'ionic-timepicker'
+  ])
 
-.run(function($ionicPlatform, $rootScope, AuthService) {
+.run(function($ionicPlatform, $rootScope, $ionicPopup, AuthService, $http) {
 
   // Verificações para ajustes visuais do teclado e barra de status
   $ionicPlatform.ready(function() {
@@ -23,24 +16,79 @@ angular.module('easydent', ['ionic',
     if (window.StatusBar) {
       StatusBar.styleDefault();
     }
+
+    window.addEventListener('native.keyboardshow', function(){
+      document.body.classList.add('keyboard-open');
+    });
+    // if(window.Connection) {
+    //   console.log(navigator.connection.type);
+    //   if(navigator.connection.type == Connection.NONE) {
+    //     $ionicPopup.confirm({
+    //       title: "Internet Disconnected",
+    //       content: "The internet is disconnected on your device."
+    //     })
+    //     .then(function(result) {
+    //       if(!result) {
+    //         ionic.Platform.exitApp();
+    //       }
+    //     });
+    //   }
+    // } 
+
+    // $http.defaults.headers.common['Content-Type'] = 'application/x-www-form-urlencoded';
+
   })
+
+})
+
+.config(function (ionicDatePickerProvider, ionicTimePickerProvider) {
+
+  var datePickerObj = {
+    inputDate: new Date(),
+    setLabel: 'Ok',
+    todayLabel: 'Hoje',
+    closeLabel: 'Fechar',
+    mondayFirst: false,
+    weeksList: ["D", "S", "T", "Q", "Q", "S", "S"],
+    monthsList: ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"],
+    templateType: 'popup',    
+    // from: new Date(2016, 1, 1),
+    // to: new Date(2018, 8, 1),
+    showTodayButton: false,
+    dateFormat: 'dd MMMM yyyy',
+    closeOnSelect: true,
+    // disableWeekdays: [6]
+  };
+  ionicDatePickerProvider.configDatePicker(datePickerObj);
+
+  var timePickerObj = {
+    inputTime: (((new Date()).getHours() * 60 * 60) + ((new Date()).getMinutes() * 60)),
+    format: 24,
+    step: 15,
+    setLabel: 'Ok',
+    closeLabel: 'Fechar'
+  };
+  ionicTimePickerProvider.configTimePicker(timePickerObj);
 
 })
 
 .config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider) {
 
   $ionicConfigProvider.backButton.text('Voltar');
-  // $ionicConfigProvider.tabs.style('striped').position('bottom');
   $ionicConfigProvider.tabs.style('standard').position('bottom');
   $ionicConfigProvider.navBar.alignTitle('center');
+  // $ionicConfigProvider.tabs.style('striped').position('bottom');
   //$ionicConfigProvider.spinner.icon('dots');
-  // Ionic uses AngularUI Router which uses the concept of states
-  // Learn more here: https://github.com/angular-ui/ui-router
-  // Set up the various states which the app can be in.
-  // Each state's controller can be found in controllers.js
+
+  // $ionicConfigProvider.scrolling.jsScrolling(false);
+  // Or for only a single platform, use
+  if( ionic.Platform.isAndroid() ) {
+    $ionicConfigProvider.scrolling.jsScrolling(false);
+  }
+
   $stateProvider
 
-    .state('login', {
+  .state('login', {
     url: '/login',
     templateUrl: 'templates/login/login.html',
     controller: 'LoginCtrl'
@@ -64,11 +112,10 @@ angular.module('easydent', ['ionic',
 
   .state('tab', {
     url: '/tab',
+    params: { reload: false},
     abstract: true,
     templateUrl: 'templates/tabs.html'
   })
-
-  // Each tab has its own nav history stack:
 
   .state('tab.home', {
     url: '/home',
@@ -89,6 +136,68 @@ angular.module('easydent', ['ionic',
       }
     }
   })
+
+  .state('tab.dentistas', {
+    url: '/dentistas',
+    views: {
+      'tab-configuracoes':{
+       templateUrl: 'templates/tabs/dentistas.html',
+       controller: 'DentistasCtrl'
+     } 
+   }
+ })
+
+  .state('tab.laboratorios', {
+    url: '/laboratorios',
+    views: {
+      'tab-configuracoes': {
+        templateUrl: 'templates/tabs/laboratorios.html',
+        controller: 'LaboratoriosCtrl'
+      }
+    }
+  })
+
+  .state('tab.novodentista', {
+    url: '/dentistas/novo',
+
+    views: {
+      'tab-configuracoes':{
+       templateUrl: 'templates/detail/dentista.html',
+       controller: 'DentistaCtrl'
+     } 
+   }
+ })
+
+  .state('tab.editardentista', {
+    url: '/dentistas/edit/:dentistaId',
+    // parent: 'tab.dentistas',
+    views: {
+      'tab-configuracoes':{
+       templateUrl: 'templates/detail/dentista.html',
+       controller: 'DentistaCtrl'
+     } 
+   }
+ })
+
+  .state('tab.novolaboratorio', {
+    url: '/laboratorios/novo',
+    views: {
+      'tab-configuracoes':{
+       templateUrl: 'templates/detail/laboratorio.html',
+       controller: 'LaboratorioCtrl'
+     } 
+   }
+ })
+
+  .state('tab.editarlaboratorio', {
+    url: '/laboratorios/edit/:laboratorioId',
+    views: {
+      'tab-configuracoes':{
+       templateUrl: 'templates/detail/laboratorio.html',
+       controller: 'LaboratorioCtrl'
+     } 
+   }
+ })
 
   .state('tab.novopaciente', {
     url: '/paciente-new',
@@ -120,6 +229,16 @@ angular.module('easydent', ['ionic',
     }
   })
 
+  .state('tab.configuracoes', {
+    url: '/configuracoes',
+    views: {
+      'tab-configuracoes': {
+        templateUrl: 'templates/tabs/configuracoes.html',
+        controller: 'ConfiguracoesCtrl'
+      }
+    }
+  })
+
   .state('tab.novoagendamento', {
     url: '/novo-agendamento',
     views: {
@@ -130,12 +249,12 @@ angular.module('easydent', ['ionic',
     }
   })
 
-  .state('tab.laboratorios', {
-    url: '/laboratorios',
+  .state('tab.editaragendamento', {
+    url: '/editar-agendamento/:agendamentoId',
     views: {
-      'tab-laboratorios': {
-        templateUrl: 'templates/tabs/laboratorios.html',
-        controller: 'LaboratoriosCtrl'
+      'tab-agendamentos': {
+        templateUrl: 'templates/detail/edit-agendamento.html',
+        controller: 'EditAgendamentoCtrl'
       }
     }
   })
@@ -150,12 +269,12 @@ angular.module('easydent', ['ionic',
     }
   })
 
-  .state('tab.dentistas', {
-    url: '/dentistas',
+  .state('tab.atenderConsulta', {
+    url: 'consulta/:consultaId',
     views: {
-      'tab-dentistas': {
-        templateUrl: 'templates/tabs/dentistas.html',
-        controller: 'DentistasCtrl'
+      'tab-home': {
+        templateUrl: 'templates/detail/consulta.html',
+        controller: 'ConsultaCtrl'
       }
     }
   })
@@ -170,7 +289,6 @@ angular.module('easydent', ['ionic',
 .factory('AuthInterceptor', function($rootScope, $q, AUTH_EVENTS) {
   return {
     responseError: function(response) {
-      //response.status = response.status == -1? 401:response.status;
       $rootScope.$broadcast({
         401: AUTH_EVENTS.notAuthenticated,
         403: AUTH_EVENTS.notAuthorized
@@ -182,31 +300,31 @@ angular.module('easydent', ['ionic',
 
 .config(function($httpProvider) {
   $httpProvider.interceptors.push('AuthInterceptor');
+  // $httpProvider.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=utf-8';
 })
 
-.run(function($rootScope, $state, AuthService, AUTH_EVENTS) {
-  $rootScope.$on('$stateChangeStart', function(event, next, nextParams, fromState) {
+.run(function ($rootScope, $state, AuthService, AUTH_EVENTS) {
+  $rootScope.$on('$stateChangeStart', function (event,next, nextParams, fromState) {
 
-    if (!('data' in next) || (!'authorizedRoles' in next.data)) {
-      console.warn("No permission defined for state [" + next.name + "]");
-    } else {
-      if ('data' in next && 'authorizedRoles' in next.data) {
-        var authorizedRoles = next.data.authorizedRoles;
-        if (!AuthService.isAuthorized(authorizedRoles)) {
-          event.preventDefault();
-          $state.go($state.current, {}, {
-            reload: true
-          });
-          $rootScope.$broadcast(AUTH_EVENTS.notAuthorized);
-        }
+    if ('data' in next && 'authorizedRoles' in next.data) {
+      var authorizedRoles = next.data.authorizedRoles;
+      if (!AuthService.isAuthorized(authorizedRoles)) {
+        event.preventDefault();
+        // $state.go($state.current, {}, {reload: true});
+        $state.go('login', {}, {reload: true});
+        $rootScope.$broadcast(AUTH_EVENTS.notAuthorized);
       }
+    }else{
+      console.warn('Permission not defined for state ['+next.name+']')
+    }
 
-      if (!AuthService.isAuthenticated()) {
-        if (next.name !== 'login' && next.name !== 'signup') {
-          event.preventDefault();
-          $state.go('login');
-        }
+    if (!AuthService.isAuthenticated()) {
+      if (next.name !== 'login' && next.name !== 'signup') {
+        event.preventDefault();
+        $state.go('login'); 
       }
     }
   });
 })
+
+;

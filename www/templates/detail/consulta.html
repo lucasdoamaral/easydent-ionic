@@ -1,0 +1,40 @@
+<ion-view view-title="Consulta" >
+
+  <ion-nav-buttons side="right">
+    <button class="button" ng-click="salvar(agendamento)">Salvar</button>
+  </ion-nav-buttons>
+
+  <ion-content scroll="false"> 
+
+    <div class="list list-inset">
+
+      <label class="item item-input item-label">
+        <span class="input-label">Nome</span>
+        <input type="text" ng-model="dentista.nome" placeholder="Nome do dentista">
+      </label>
+
+      <label class="item item-input item-label">
+        <span class="input-label">Celular</span>
+        <input name="celular" type="tel" ui-mask="(99) 9999-9999?9" ng-model="dentista.celular">
+      </label>
+
+      <label class="item item-input item-label">
+        <span class="input-label">E-mail</span>
+        <input name="celular" type="email" ng-model="dentista.email">
+      </label>
+
+      <label class="item item-input item-label">
+        <span class="input-label">CRO</span>
+        <input type="number" ng-model="dentista.cro" placeholder="Nº do CRO">
+      </label>
+
+      <label class="item item-input item-label">
+        <span class="input-label">Estado CRO</span>
+        <input type="text" style="text-transform: uppercase" ng-model="dentista.estadoCRO" maxlength="2" placeholder="Estado do CRO">
+      </label>
+
+    </div>
+
+  </ion-content>
+
+</ion-view>

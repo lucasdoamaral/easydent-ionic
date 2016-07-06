@@ -1,40 +1,45 @@
 /* Empty. Add your own CSS if you like */
 
 
-/** Styling for the username field **/
-
-label.item.has-error {
-  border-bottom: 2px solid red;
+.error-container {
+  margin: 5px 0;
 }
 
-/** Styling for the password field when an error exists**/
-
-label.item.has-error-lr {
-  border-left: 2px solid red;
-  border-right: 2px solid red;
+.error-container:last-child {
+  margin: 5px 0 0;
 }
 
-/** Styling for the password field when an error has been resolved**/
-
-label.item.valid-lr {
-  border-left: 2px solid green;
-  border-right: 2px solid green;
+.error {
+  padding: 10px 16px;
+  font-family: "Arial Black", Gadget, sans-serif;
+  font-size: 11px;
+  text-transform: uppercase;
+  color: #555;
+  vertical-align: middle;
 }
 
-/** Styling for the error text and container **/
-
-.form-errors {
-  margin: 5px 0
+.error i {
+  font-size: 24px;
+  color: #B83E2C;  
+  vertical-align: middle;
 }
-.form-error {
-  padding: 2px 0 2px 16px;
-  color: red;
+
+.last-error-container > .error {
+  padding: 10px 16px 0;
+}
+
+.has-errors {
+  border-bottom: 3px solid #B83E2C;
+}
+
+.no-errors {
+  border-bottom: 3px solid green;
 }
 
 /** templates/welcome.html **/
 
 .welcome.scroll-content {
-  background-image: url('../img/welcome-background.jpg');
+  /*background-image: url('../img/welcome-background.jpg');*/
   text-align: center;
 }
 .welcome input {
@@ -48,7 +53,7 @@ h2.app-name {
   padding-top: 30px;
   color: #4cb14c;
   font-weight: bold;
-  font-size: 50px;
+  font-size: 49px;
 }
 
 .welcome a, .signup a{
@@ -65,9 +70,10 @@ h2.app-name {
 /** index.html **/
 
 .scroll-content {
-  background-image: url('../img/background.jpg');
+  /*background-image: url('../img/background.jpg');*/
   background-position: center;
   background-blend-mode: darken;
+  background-color: #EFEFEF;
 }
 
 /** signup **/
@@ -108,7 +114,120 @@ input[disabled] {
 }
 .calendar-bar button {
   font-weight: bold;
-/*  width: 40px !important;
-min-width: 0px !important;*/
+  padding: 0px 10px
 }
 
+th {
+  text-transform: uppercase;
+  color: #FFF;
+  text-shadow: 1px 1px #000;
+  background-color: #33cd5f;
+}
+
+th.weekview-header {
+  background-color: #33cd5f !important;
+  font-size: 10px !important;
+}
+
+
+/* Geral */
+
+input[readonly] {
+  background-color: transparent !important;
+}
+
+.no-padding {
+  padding-top: 0px;
+  padding-bottom: 0px;
+  padding-right: 0px;
+  padding-left: 0px;
+}
+
+ion-header-bar {
+  font-weight: bold;
+  text-shadow: 1px 1px #000;
+  text-transform: capitalize;
+}
+
+
+.first-field {
+  border-radius: 7px 10px 0px 0px;
+}
+
+.last-field {
+  border-radius: 0px 0px 10px 10px;
+}
+
+.popup {
+  text-align: center;
+}
+
+body.keyboard-open .has-footer{ 
+  bottom: 0;
+}
+
+
+/*Action Sheet*/
+
+.platform-android .action-sheet-backdrop.active {
+  background-color: rgba(0, 0, 0, 0.1); 
+}
+.platform-android .action-sheet {
+  align-content: center;
+  margin:auto;
+  max-width: 96vw;
+  border-radius: 5px;
+  /*margin: 0;*/
+  margin-bottom: 10px;
+}
+.platform-android .action-sheet .action-sheet-title, .platform-android .action-sheet .button {
+  text-align: left;
+  /*border-color: #e2e2e2;*/
+  font-size: 16px;
+  color: inherit;
+}
+.platform-android .action-sheet .action-sheet-title {
+  font-size: 14px;
+  padding: 16px;
+  color: #666; 
+}
+.platform-android .action-sheet .button {
+  border-color: #e2e2e2;
+  padding-left: 16px;
+  color: #104e89;
+}
+.platform-android .action-sheet .button.destructive {
+  color: red;
+}
+.platform-android .action-sheet .button.active, .platform-android .action-sheet .button.activated {
+  background: #e8e8e8; 
+}
+.platform-android .action-sheet-group {
+  /*margin: 0;*/
+  border-radius: 0;
+  background-color: #fafafa; 
+}
+.platform-android .action-sheet-cancel {
+  display: none;
+}
+.platform-android .action-sheet-has-icons .button {
+  padding-left: 56px; 
+}
+
+/* Dentista */
+
+.horario-dentista {
+  padding-top: 0px !important;
+}
+
+.weekday-col {
+  line-height: 35px;
+}
+
+/* Home */
+.item.item-text-wrap.agendamento-antigo {
+  border: 1px #AAA solid !important;
+  /* box-sizing: border-box; */
+  margin: 1px;
+  background-color: #dedede;
+}

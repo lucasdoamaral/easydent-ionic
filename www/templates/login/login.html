@@ -7,33 +7,22 @@
       <h2 class="app-name">Easydent</h2>
       <h5>Tenha controle total sobre sua agenda</h5>
 
-      <label class="item item-input">
-        <input type="text" name="usuario" placeholder="Informe seu e-mail cadastrado" ng-model="login.usuario" required>
+      <label class="item item-input first-field">
+        <input type="text" name="usuario" placeholder="Informe seu e-mail cadastrado" ng-model="login.usuario" autocorrect="off" autocapitalize="off" autocomplete="off" required>
       </label>
 
-      <label class="item item-input">
+      <label class="item item-input last-field">
         <input type="password" name="senha" placeholder="Informe a sua senha" ng-model="login.senha" required>
       </label>
 
-      <input type="button" id="login-button" value="Entrar" class="button button-block button-balanced" ng-click="entrar(login)" />
-      <input type="button" id="forgot-password-button" value="Esqueceu sua senha?" class="button button-small button-stable" ng-click="entrar(login)" />
+      <input type="submit" id="login-button" value="Entrar" class="button button-block button-small button-balanced" ng-click="entrar(login)" />
+      
+      <div class="button-bar ">
+        <input type="button" id="forgot-password-button" value="Esqueci a senha" class="button  button-small button-light" ng-click="esqueciSenha()" />
+        <input type="button" id="forgot-password-button" value="Cadastre-se" class="button button-small button-stable" ui-sref="signup" />
+      </div>
 
-      <div class="error-message" ng-show="hasError">{{errorMessage}}</div>
+    </form>
 
-<!--       <p class="text-center">
-        <a href="#/esqueci-senha">Esqueci a senha</a>
-      </p>
-    -->
-    <p class="text-center">
-    </p>
-
-  </form>
-
-  <div class="bar bar-footer bar-balanced">
-    <div style="width: 100%; line-height: 34px;">
-      Não possui uma conta?&nbsp<a href="#/signup"> Cadastre-se</a>
-    </div>
-  </div>
-
-</ion-content>
+  </ion-content>
 </ion-view>

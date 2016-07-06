@@ -1,0 +1,64 @@
+<ion-view view-title="{{laboratorio.id ? 'Editar' : 'Novo'}} Laboratório" >
+
+  <ion-nav-buttons side="right">
+    <button class="button" ng-click="salvar(laboratorio)">Salvar</button>
+  </ion-nav-buttons>
+
+  <ion-content scroll="false"> 
+
+    <div class="list">
+
+<!--       <div class='item item-divider'>
+      </div>
+    -->
+    <label class="item item-input item-label">
+      <span class="input-label">Nome</span>
+      <input type="text" ng-model="laboratorio.nome" placeholder="Nome do Laboratório">
+    </label>
+
+    <div class='item item-divider'>
+      Informe o tipo de laboratório
+    </div>
+    <ion-radio ng-model="laboratorio.fgTipoLaboratorio" ng-value="1">Radiologia</ion-radio>
+    <ion-radio ng-model="laboratorio.fgTipoLaboratorio" ng-value="2">Prótese</ion-radio>
+
+    <div class='item item-divider'>
+      Informações de Contato
+    </div>
+
+
+    <label class="item item-input item-label">
+      <span class="input-label">Celular</span>
+      <input name="celular" type="tel" ui-mask="(99) 9999-9999?9" ng-model="laboratorio.celular">
+    </label>
+
+    <label class="item item-input item-label">
+      <span class="input-label">Telefone</span>
+      <input name="celular" type="tel" ui-mask="(99) 9999-9999?9" ng-model="laboratorio.telefone">
+    </label>
+
+    <label class="item item-input item-label">
+      <span class="input-label">E-mail</span>
+      <input name="celular" type="email" ng-model="laboratorio.email">
+    </label>
+
+    <label class="item item-input item-label">
+      <span class="input-label">CNPJ</span>
+      <input type="text" ng-model="laboratorio.cnpj" placeholder="CNPJ">
+    </label>
+
+<!--       <label class="item item-input item-select">
+        <span class="input-label">Tipo</span>
+        <select ng-model="laboratorio.fgTipoLaboratorio" ng-init="exchangeOption = getSelectedExchange()" >
+          <option ng-if="!laboratorio.id" value="" selected disabled hidden>Selecione</option>
+          <option value="1" selected="laboratorio.fgTipoLaboratorio == 1">Radiologia</option>
+          <option value="2" selected="laboratorio.fgTipoLaboratorio == 2">Prótese</option>
+        </select>
+      </label>
+    -->
+
+  </div>
+
+</ion-content>
+
+</ion-view>

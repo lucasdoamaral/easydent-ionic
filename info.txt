@@ -16,6 +16,7 @@ Config.xml file:
   <content src="index.html"/>
   <access origin="*"/>
   <allow-navigation href="https://easydent.jelasticlw.com.br/easydent-webservice/rest/*/*"/>
+  <allow-navigation href="https://under.jelastic.com.br/easydent-webservice/rest/*/*"/>
   <preference name="webviewbounce" value="false"/>
   <preference name="UIWebViewBounce" value="false"/>
   <preference name="DisallowOverscroll" value="true"/>

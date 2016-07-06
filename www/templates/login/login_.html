@@ -1,0 +1,46 @@
+<ion-view view-title="Easydent" ng-controller="LoginCtrl" hide-nav-bar="true">
+
+  <ion-content class="padding welcome" scroll="false">
+
+    <div class="card">
+
+      <!-- <img src="img/logo.jpg" class="padding"></img> -->
+
+      <h2 class="app-name">Easydent</h2>
+      <h5>Tenha controle total sobre sua agenda</h5>
+
+      <form name="loginForm">
+        <div class="item">
+
+          <label class="item item-input">
+            <input type="text" name="usuario" ng-focus="clearErrorMessage()" placeholder="E-mail ou usuário" ng-model="login.usuario">
+          </label>
+
+          <label class="item item-input">
+            <input type="password" name="senha" ng-focus="clearErrorMessage()" placeholder="Senha" ng-model="login.senha" required>
+          </label>
+
+          <input type="button" id="login-button" value="Entrar" class="button button-block button-balanced" ng-click="entrar(login)">
+          </input>
+
+          <div class="error-message" ng-show="hasError">{{errorMessage}}</div>
+
+          <p class="text-center">
+            <a href="#/esqueci-senha">Esqueci a senha</a>
+          </p>
+
+        </div>
+
+        <div class="item item-divider">
+          <p class="text-center">
+            Não possui uma conta? <a href="#/signup">Cadastre-se</a>
+          </p>
+        </div>
+
+    </div>
+
+
+    </form>
+
+  </ion-content>
+</ion-view>

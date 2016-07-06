@@ -1,0 +1,61 @@
+<ion-view view-title="Agendamento" >
+
+  <ion-nav-buttons side="right">
+    <!-- <button class="button" ng-click="salvar(agendamento)">Salvar</button> -->
+  </ion-nav-buttons>
+
+  <ion-content>
+    <div class="list">
+
+      <form name="novoAgendamentoForm">
+
+        <div ng-if="editando" style="text-align: center; background-color: yellow; padding: 5px; font-weight: bold;">Editando consulta</div>
+
+        <label class="item item-input item-select">
+          <div class="input-label">Paciente</div>
+          <select ng-model="agendamento.paciente" ng-disabled="!editando" ng-options="paciente as paciente.nome for paciente in pacientes track by paciente.id"></select>
+        </label>
+
+        <label class="item item-input item-select">
+          <div class="input-label">Dentista</div>
+          <select ng-model="agendamento.dentista" ng-disabled="!editando" ng-change="carregarHorariosDisponiveis(agendamento)" ng-options="dentista as dentista.nome for dentista in dentistas track by dentista.id"></select>
+        </label>
+
+
+        <label class="item item-input">
+          <span class="input-label">Data</span>
+          <input type="date" id="data-agendamento" ng-disabled="!editando" ng-click="showDatePicker()" ng-change="carregarHorariosDisponiveis(agendamento)" ng-readonly="true" ng-model="agendamento.data">
+        </label>
+
+        <label class="item item-input item-select" ng-if="!agendamento.diaCompleto">
+          <div class="input-label">Hora</div>
+          <select ng-model="agendamento.hora" ng-disabled="!editando" ng-options="horarioDisponivel for horarioDisponivel in listaHorariosDisponiveis">
+            <option value="">Selecione o dentista e a data</option>
+          </select>
+        </label>        
+
+        <ion-toggle ng-model="agendamento.diaCompleto" ng-disabled="!editando" toggle-class="toggle-balanced">Sem horário fixo</ion-toggle>
+
+        <label class="item item-input">
+          <span class="input-label">Procedimento</span>
+          <input type="text" ng-disabled="!editando" ng-model="agendamento.procedimento">
+        </label>
+
+      </form>
+
+      <div class="button-bar" style="margin: 10px 0px;" ng-if="!editando">
+        <button class="button button-stable button-small" ng-click="toggleEdicao()">Editar Consulta</button>
+      </div>
+      <div class="button-bar" style="margin: 10px 0px;" ng-if="!editando">
+        <button class="button button-energized button-small" ng-click="cancelarConsulta(agendamento)">Cancelar</button>
+        <button class="button button-balanced button-small" ng-click="confirmarComparecimento(agendamento)">Paciente Atendido</button>     
+      </div>
+      <div class="button-bar"  style="margin: 10px 0px;" ng-disabled="editando">
+        <button class="button button-small" ng-if="editando" ng-click="descartarAlteracoes()">Descartar Alterações</button>
+        <button class="button button-small button-balanced" ng-if="editando" ng-click="concluirEdicao()">Salvar</button>
+      </div>
+
+    </div>
+
+  </ion-content>
+</ion-view>

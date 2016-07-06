@@ -1,45 +1,44 @@
-<!--
-  This template loads for the 'tab.friend-detail' state (app.js)
-  'friend' is a $scope variable created in the FriendsCtrl controller (controllers.js)
-  The FriendsCtrl pulls data from the Friends service (service.js)
-  The Friends service returns an array of friend data
--->
-<ion-view view-title="" ng-controller="PacienteDetailCtrl">
+<ion-view view-title="Paciente" ng-controller="PacienteDetailCtrl" >
 
   <ion-nav-buttons side="right">
-    <button class="button" ng-click="salvar()">Salvar</button>
+    <button class="button" ng-click="salvar()" ng-disabled="pacienteForm.$invalid" >Salvar</button>
   </ion-nav-buttons>
 
-  <ion-content>
+  <ion-content scroll="false"> 
 
-    <div class="list list-inset">
+    <form name="pacienteForm" class="list list-inset">
+
       <div ng-if="paciente.codigo">
         <label class="item item-input item-label">
           <span class="input-label">Código</span>
-          <input type="text" ng-readonly="true" ng-model="paciente.codigo">
+          <input name="codigo" type="text" ng-readonly="true" ng-model="paciente.codigo">
         </label>
       </div>
+
       <label class="item item-input item-label">
         <span class="input-label">Nome</span>
-        <input type="text" ng-model="paciente.nome" placeholder="Nome do paciente">
+        <input name="nome" type="text" ng-model="paciente.nome" placeholder="Nome do paciente" required>
       </label>
+
       <label class="item item-input item-label">
         <span class="input-label">Celular</span>
-        <input type="tel" ui-mask="(99) 9999-9999?9" ng-model="paciente.celular">
+        <input name="celular" type="tel" ui-mask="(99) 9999-9999?9" ng-model="paciente.celular">
       </label>
-      <label class="item item-input item-label">
+
+      <label class="item item-input item-label">  
         <span class="input-label">Telefone</span>
-        <input type="tel" ui-mask="(99) 9999-9999?9" ng-model="paciente.telefone">
+        <input name="telefone" type="tel" ui-mask="(99) 9999-9999?9" ng-model="paciente.telefone">
       </label>
       <label class="item item-input item-label">
         <span class="input-label">E-mail</span>
-        <input type="email" ng-model="paciente.email" placeholder="Informe o e-mail">
+        <input name="email" type="email" ng-model="paciente.email" placeholder="Informe o e-mail">
       </label>
       <label class="item item-input item-label">
         <span class="input-label">Dt. Nasc.</span>
-        <input type="date" ng-model="paciente.dataNascimento" placeholder="Informe a data de nascimento">
+        <input name="data-nascimento" type="date" ng-model="paciente.dataNascimento" placeholder="Informe a data de nascimento">
       </label>
-    </div>
+
+    </form>
 
   </ion-content>
 

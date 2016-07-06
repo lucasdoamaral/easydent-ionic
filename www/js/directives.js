@@ -16,19 +16,46 @@ angular.module('easydent.directives', [])
     var codigoArea, digitoInicial, primeiroTrecho, segundoTrecho;
     switch (value.length) {
       case 11:
-        return "(" + value.slice(0, 2) + ") " + value.slice(2, 3) + "-" + value.slice(3, 7) + "-" + value.slice(7, 11);
+      return "(" + value.slice(0, 2) + ") " + value.slice(2, 3) + "-" + value.slice(3, 7) + "-" + value.slice(7, 11);
       case 10:
-        return "(" + value.slice(0, 2) + ") " + value.slice(2, 6) + "-" + value.slice(6, 10);
+      return "(" + value.slice(0, 2) + ") " + value.slice(2, 6) + "-" + value.slice(6, 10);
       case 9:
-        return value.slice(0, 1) + "-" + value.slice(1, 5) + "-" + value.slice(5, 9);
+      return value.slice(0, 1) + "-" + value.slice(1, 5) + "-" + value.slice(5, 9);
       case 8:
-        return value.slice(0, 4) + "-" + value.slice(4, 8);
+      return value.slice(0, 4) + "-" + value.slice(4, 8);
       default:
-        return "*" + value + "*";
+      return "*" + value + "*";
     }
 
   };
-});
+})
 
+.filter('numberFixedLen', function () {
+  return function (n, len) {
+    var num = parseInt(n, 10);
+    len = parseInt(len, 10);
+    if (isNaN(num) || isNaN(len)) {
+      return n;
+    }
+    num = '' + num;
+    while (num.length < len) {
+      num = '0' + num;
+    }
+    return num;
+  };
+})
+
+.directive('autoComplete', function($timeout) {
+  return function(scope, iElement, iAttrs) {
+    iElement.autocomplete({
+      source: scope[iAttrs.uiItems],
+      select: function() {
+        $timeout(function() {
+          iElement.trigger('input');
+        }, 0);
+      }
+    });
+  };
+})
 
 ;

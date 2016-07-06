@@ -1,11 +1,37 @@
 <ion-view view-title="Laboratórios">
+
+  <ion-nav-buttons side="right">
+    <button class="button" ng-click="novo()">Novo</button>
+  </ion-nav-buttons>
+
   <ion-content>
 
+    <ion-refresher pulling-text="Atualizando..." on-refresh="carregarLaboratorios()"></ion-refresher>
+
     <ion-list>
-        <ion-item ng-repeat="laboratorio in laboratorios">
-          {{laboratorio.nome}}
+
+      <ion-item ng-if="!listaCarregadaComErros && !listaCarregadaSemErros" style="text-align: center"> 
+        <ion-spinner class="spinner-balanced"></ion-spinner><br />
+        Carregando laboratórios
+      </ion-item>
+
+      <ion-item class="item-icon-left" ng-if="listaCarregadaComErros">
+        <i class="icon ion-sad-outline"></i> {{mensagemErro}}
+      </ion-item>
+
+      <ion-item ng-if="listaCarregadaSemErros && !listaLaboratorios.length">
+        Nenhum laboratório cadastrado
+      </ion-item>
+
+      <div ng-repeat="(tipo, laboratorios) in listaLaboratorios | groupBy: 'fgTipoLaboratorio'" >
+        <div class="item item-divider">        {{tipo == 1? 'Radiologia' : 'Prótese'}}</div>
+        <ion-item ng-repeat="laboratorio in laboratorios" class="item-icon-left" on-hold="exibirMenu({{laboratorio}})" href="#tab/laboratorios/edit/{{laboratorio.id}}">
+          <i class="icon ion-erlenmeyer-flask"></i> {{laboratorio.nome}}
         </ion-item>
+      </div>
+
     </ion-list>
 
   </ion-content>
+
 </ion-view>

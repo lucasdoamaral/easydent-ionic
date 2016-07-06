@@ -1,0 +1,100 @@
+<ion-view view-title="Dentista" >
+
+  <ion-nav-buttons side="right">
+    <button class="button" ng-click="salvar(dentista)">Salvar</button>
+  </ion-nav-buttons>
+
+  <ion-content> 
+
+    <div class="list">
+
+      <label class="item item-input item-label">
+        <span class="input-label">Nome</span>
+        <input type="text" ng-model="dentista.nome" placeholder="Nome do dentista">
+      </label>
+
+      <label class="item item-input item-label">
+        <span class="input-label">Celular</span>
+        <input name="celular" type="tel" ui-mask="(99) 9999-9999?9" ng-model="dentista.celular">
+      </label>
+
+      <label class="item item-input item-label">
+        <span class="input-label">E-mail</span>
+        <input name="celular" type="email" ng-model="dentista.email">
+      </label>
+
+      <label class="item item-input item-label">
+        <span class="input-label">CRO</span>
+        <input type="number" ng-model="dentista.cro" placeholder="Nº do CRO">
+      </label>
+
+      <label class="item item-input item-label">
+        <span class="input-label">Estado CRO</span>
+        <input type="text" style="text-transform: uppercase" ng-model="dentista.estadoCRO" maxlength="2" placeholder="Estado do CRO">
+      </label>
+
+    </div>
+
+<!--     <div class="list">
+      <div class="item item-divider">Horários</div>
+
+      <div class="item">
+        {{exibicaoHorarios}}
+      </div>
+
+      <label class="item item-select">
+        <span class="input-label">Dia da Semana</span>
+        <select ng-model="diaSemana" ng-change="carregarHorario(diaSemana )">
+          <option value="1">Domingo</option>
+          <option value="2">Segunda-Feira</option>
+          <option value="3">Terça-Feira</option>
+          <option value="4">Quarta-Feira</option>
+          <option value="5">Quinta-Feira</option>
+          <option value="6">Sexta-feira</option>
+          <option value="7">Domingo</option>
+        </select>
+      </label>
+      
+      <div class="item no-padding" ng-if="horario">
+        <div class="row">
+          <div class="col">
+            <input type="time" class="horario-dentista" ng-model="horario.horaInicial" />
+          </div>
+          <div class="col">
+            <input type="time" class="horario-dentista" ng-model="horario.horaAlmocoInicial" ng-readonly="true" ng-click="selectTimeHoraAlmocoInicial(horario.horaAlmocoInicial)" />
+          </div>
+          <div class="col">
+            <input type="time" class="horario-dentista" ng-model="horario.horaAlmocoFinal" ng-readonly="true" ng-click="selectTimeHoraAlmocoFinal(horario.horaAlmocoFinal)" />
+          </div>
+          <div class="col">
+            <input type="time" class="horario-dentista" ng-model="horario.horaFinal" ng-readonly="true" ng-click="selectTimeHoraAlmocoFinal(horario.horaFinal)" />
+          </div>
+        </div>
+      </div>
+
+      <label class="item" ng-if="horario">
+        <div class="button-bar">
+          <button class="button button-small button-outline button-balanced" ng-click="repetirSemana()">
+            <i class="ion-android-done"></i> Aplicar seg-sex
+          </button>
+          <button class="button button-small button-balanced" ng-click="repetirTodos()">            
+            <i class="ion-android-done"></i> Aplicar p/ todos
+          </button>
+        </div>
+      </label>
+      <label class="item" ng-if="horario">
+        <div class="button-bar">
+          <button class="button button-small button-outline button-assertive" ng-click="limpar()">
+            <i class="ion-android-close"></i> Limpar
+          </button>
+          <button class="button button-small button-assertive" ng-click="limparTodos()">
+            <i class="ion-android-close"></i> Limpar Todos
+          </button>
+        </div>
+      </label>
+
+    </div> -->
+
+  </ion-content>
+
+</ion-view>

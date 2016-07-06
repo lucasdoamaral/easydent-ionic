@@ -1,44 +1,42 @@
-<ion-view view-title="Novo Agendamento">
+<ion-view view-title="Novo Agendamento" ng-controller="NovoAgendamentoCtrl">
+
+  <ion-nav-buttons side="right">
+    <button class="button" ng-click="salvar(novoAgendamento)">Salvar</button>
+  </ion-nav-buttons>
 
   <ion-content>
     <div class="list">
       <form name="novoAgendamentoForm">
 
         <label class="item item-input item-select">
-          <div class="input-label">
-            Paciente
-          </div>
-          <select>
-            <option>Blue</option>
-            <option selected>Green</option>
-            <option>Red</option>
-          </select>
+          <div class="input-label">Paciente</div>
+          <select ng-model="novoAgendamento.paciente" ng-options="paciente as paciente.nome for paciente in pacientes track by paciente.id"></select>
         </label>
 
         <label class="item item-input item-select">
-          <div class="input-label">
-            Dentista
-          </div>
-          <select>
-            <option>Blue</option>
-            <option selected>Green</option>
-            <option>Red</option>
-          </select>
+          <div class="input-label">Dentista</div>
+          <select ng-model="novoAgendamento.dentista" ng-change="carregarHorariosDisponiveis(novoAgendamento)" ng-options="dentista as dentista.nome for dentista in dentistas track by dentista.id"></select>
         </label>
+
 
         <label class="item item-input">
           <span class="input-label">Data</span>
-          <input type="date" ng-model="novoAgendamento.data">
+          <input type="date" id="data-agendamento" ng-click="showDatePicker()" ng-change="carregarHorariosDisponiveis(novoAgendamento)" ng-readonly="true" ng-model="novoAgendamento.data">
         </label>
 
-        <label class="item item-input">
-          <span class="input-label">Hora</span>
-          <input type="text">
-        </label>
+        <label class="item item-input item-select" ng-if="!novoAgendamento.diaCompleto">
+          <div class="input-label">Hora</div>
+          <select ng-model="novoAgendamento.hora" ng-options="horarioDisponivel for horarioDisponivel in listaHorariosDisponiveis">
+            <option value="">Selecione o dentista e a data</option>
+          </select>
+        </label>        
+
+        <ion-toggle ng-model="novoAgendamento.diaCompleto" toggle-class="toggle-balanced">Sem horário fixo</ion-toggle>
+
 
         <label class="item item-input">
           <span class="input-label">Procedimento</span>
-          <input type="text">
+          <input type="text" ng-model="novoAgendamento.procedimento">
         </label>
 
       </form>
