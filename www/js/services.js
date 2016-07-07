@@ -1,10 +1,10 @@
-'use strict';
+"use strict";
 
 angular.module('easydent.services', [])
 
 .service('AuthService', function($q, $http, Base64, SERVER) {
 
-	var URL_LOGIN = SERVER.url + '/login';
+	var URL_LOGIN = SERVER.url + "/login";
 	var LOCAL_TOKEN_KEY = 'easydent-token';
 	var username = '';
 	var isAuthenticated = false;
@@ -48,11 +48,11 @@ angular.module('easydent.services', [])
     }
 
     var login = function(name, pw) {
-    	var authorization = 'Basic ' + Base64.encode(name + ':' + pw);
+    	var authorization = "Basic " + Base64.encode(name + ":" + pw);
     	return $q(function(resolve, reject) {
     		$http.get(URL_LOGIN, {
     			headers: {
-    				'Authorization': authorization
+    				"Authorization": authorization
     			}
     		}).then(
     		function(response) {
@@ -62,7 +62,7 @@ angular.module('easydent.services', [])
     		function(error) {
     			destroyUserCredentials();
     			reject(error.status);
-    		});
+    		})
     	});
     };
 
@@ -81,18 +81,18 @@ angular.module('easydent.services', [])
 
     return {
     	entrar: login,
-    	logout,
-    	isAuthorized,
-    	isAuthenticated() {
+    	logout: logout,
+    	isAuthorized: isAuthorized,
+    	isAuthenticated: function() {
     		return isAuthenticated;
     	},
-    	username() {
+    	username: function() {
     		return username;
     	},
-    	role() {
+    	role: function() {
     		return role;
     	},
-    	token() {
+    	token: function() {
     		authToken;
     	}
     };
@@ -105,24 +105,23 @@ angular.module('easydent.services', [])
 .service('UsuarioService', function($http, SERVER) {
 
 	return {
-		criarUsuario(novoUsuario) {
+		criarUsuario: function(novoUsuario) {
 			return $http.post(SERVER.url + '/usuarios', novoUsuario);
 		}
-	};
+	}
 
 })
 
 .factory('Base64', function() {
-
 	/* jshint ignore:start */
 
 	var keyStr = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';
 
 	return {
-		encode(input) {
-			var output = '';
-			var chr1, chr2, chr3 = '';
-			var enc1, enc2, enc3, enc4 = '';
+		encode: function(input) {
+			var output = "";
+			var chr1, chr2, chr3 = "";
+			var enc1, enc2, enc3, enc4 = "";
 			var i = 0;
 
 			do {
@@ -146,27 +145,27 @@ angular.module('easydent.services', [])
 				keyStr.charAt(enc2) +
 				keyStr.charAt(enc3) +
 				keyStr.charAt(enc4);
-				chr1 = chr2 = chr3 = '';
-				enc1 = enc2 = enc3 = enc4 = '';
+				chr1 = chr2 = chr3 = "";
+				enc1 = enc2 = enc3 = enc4 = "";
 			} while (i < input.length);
 
 			return output;
 		},
 
-		decode(input) {
-			var output = '';
-			var chr1, chr2, chr3 = '';
-			var enc1, enc2, enc3, enc4 = '';
+		decode: function(input) {
+			var output = "";
+			var chr1, chr2, chr3 = "";
+			var enc1, enc2, enc3, enc4 = "";
 			var i = 0;
 
       // remove all characters that are not A-Z, a-z, 0-9, +, /, or =
       var base64test = /[^A-Za-z0-9\+\/\=]/g;
       if (base64test.exec(input)) {
-      	window.alert('There were invalid base64 characters in the input text.\n' +
-      		'Valid base64 characters are A-Z, a-z, 0-9, \'+\', \'/\',and \'=\'\n' +
-      		'Expect errors in decoding.');
+      	window.alert("There were invalid base64 characters in the input text.\n" +
+      		"Valid base64 characters are A-Z, a-z, 0-9, '+', '/',and '='\n" +
+      		"Expect errors in decoding.");
       }
-      input = input.replace(/[^A-Za-z0-9\+\/\=]/g, '');
+      input = input.replace(/[^A-Za-z0-9\+\/\=]/g, "");
 
       do {
       	enc1 = keyStr.indexOf(input.charAt(i++));
@@ -187,8 +186,8 @@ angular.module('easydent.services', [])
       		output = output + String.fromCharCode(chr3);
       	}
 
-      	chr1 = chr2 = chr3 = '';
-      	enc1 = enc2 = enc3 = enc4 = '';
+      	chr1 = chr2 = chr3 = "";
+      	enc1 = enc2 = enc3 = enc4 = "";
 
       } while (i < input.length);
 
@@ -205,76 +204,76 @@ angular.module('easydent.services', [])
 		sort = sort || 'nome';
 		maxResults = maxResults || 0;
 		offset = offset || 0;
-		return $http.get(SERVER.url + '/pacientes?sort=' + sort + '&max-results=' + maxResults + '&offset=' + offset);
+		return $http.get(SERVER.url + '/pacientes?sort=' + sort + "&max-results=" + maxResults + "&offset=" + offset)
 	};
 
 	var buscar = function(id) {
-		return $http.get(SERVER.url + '/pacientes/' + id);
+		return $http.get(SERVER.url + '/pacientes/' + id)
 	};
 
 	var salvar = function(paciente) {
-		return $http.post(SERVER.url + '/pacientes/', paciente);
+		return $http.post(SERVER.url + '/pacientes/', paciente)
 	};
 
 	var excluir = function(id) {
-		return $http.delete(SERVER.url + '/pacientes/' + id);
+		return $http.delete(SERVER.url + '/pacientes/' + id)
 	};
 
 	return {
 		todos: listar,
-		buscar,
-		salvar,
-		excluir
+		buscar: buscar,
+		salvar: salvar,
+		excluir: excluir
 	};
 
 })
 
 .service('Dentistas', function($http, $rootScope, $stateParams, SERVER) {
 	return {
-		todos() {
-			return $http.get(SERVER.url + '/dentistas?sort=nome');
+		todos: function() {
+			return $http.get(SERVER.url + '/dentistas?sort=nome')
 		},
-		horariosDisponiveis(dentistaId, data) {
+		horariosDisponiveis: function(dentistaId, data) {
 			var ano = data.getYear() + 1900;
 			var mes = data.getMonth() + 1;
 			var dia = data.getDay();
-			return $http.get(SERVER.url + '/dentistas/' + dentistaId + '/horariosdisponiveis/' + ano + '/' + mes + '/' + dia);
+			return $http.get(SERVER.url + '/dentistas/' + dentistaId + '/horariosdisponiveis/'+ ano + '/'+  mes +'/'+ dia);
 		},
-		excluir (id) {
-			return $http.delete(SERVER.url + '/dentistas/' + id);
+		excluir: function (id) {
+			return $http.delete(SERVER.url + '/dentistas/' + id)
 		},
-		buscar (id) {
-			return $http.get(SERVER.url + '/dentistas/' + id);
+		buscar: function (id) {
+			return $http.get(SERVER.url + '/dentistas/' + id)
 		},
-		salvar (dentista) {
+		salvar: function (dentista) {
 			return $http.post(SERVER.url + '/dentistas', dentista);
 		}
-	};
+	}
 })
 
 .service('Laboratorios', function($http, $rootScope, $stateParams, SERVER) {
 	return {
-		todos() {
-			return $http.get(SERVER.url + '/laboratorios');
+		todos: function() {
+			return $http.get(SERVER.url + '/laboratorios')
 		},
-		excluir (id) {
-			return $http.delete(SERVER.url + '/laboratorios/' + id);
+		excluir: function (id) {
+			return $http.delete(SERVER.url + '/laboratorios/' + id)
 		},
-		buscar (id) {
-			return $http.get(SERVER.url + '/laboratorios/' + id);
+		buscar: function (id) {
+			return $http.get(SERVER.url + '/laboratorios/' + id)
 		},
-		salvar (laboratorio) {
+		salvar: function (laboratorio) {
 			return $http.post(SERVER.url + '/laboratorios', laboratorio);
 		}
-	};
+	}
 })
 
 .service('Pendencias', function($http, $rootScope, $stateParams, SERVER) {
 	return {
-		todas() {
-			return $http.get(SERVER.url + '/pendencias');
+		todas: function() {
+			return $http.get(SERVER.url + '/pendencias')
 		}
-	};
+	}
 })
 
 .service('CalendarService', function() {
@@ -282,50 +281,50 @@ angular.module('easydent.services', [])
 	var dataCalendario;
 
 	return {
-		dataCalendario
-	};
+		dataCalendario: dataCalendario,
+	}
 })
 
 .service('Agendamentos', function($http, SERVER) {
 	return {
 
-		salvar (agendamento) {
+		salvar: function (agendamento) {
 			return $http.post(SERVER.url + '/consultas', agendamento);
 		},
 
-		buscar (id) {
+		buscar: function (id) {
 			return $http.get(SERVER.url + '/consultas/' + id);
 		},
 
-		todos(dataFiltro) {
+		todos: function(dataFiltro) {
 			return $http.get(SERVER.url + '/consultas');
 		},
 
-		proximos(quantidade) {
+		proximos: function(quantidade) {
 			if (!quantidade) {
 				console.error('Não foi especificada quantidade na busca das próximas consultas! ');
 			}
 			return $http.get(SERVER.url + '/consultas/proximas/' + quantidade + '?sort=data');
 		},
 
-		ultimos (quantidade) {
+		ultimos: function (quantidade) {
 			if (!quantidade) {
 				console.error('Não foi especificada quantidade na busca das últimas consultas! ');
 			}
 			return $http.get(SERVER.url + '/consultas/ultimasnaorespondidas/' + quantidade + '?sort=data+DESC');
 		},
 
-		buscarNoPeriodo (inicio, fim) {
+		buscarNoPeriodo: function (inicio, fim) {
 			var anoInicio = inicio.getFullYear();
 			var mesInicio = inicio.getMonth() + 1;
 			var diaInicio = inicio.getDate();
 			var anoFim = fim.getYear() + 1900;
 			var mesFim = fim.getMonth() + 1;
 			var diaFim = fim.getDate();
-			return $http.get(SERVER.url + '/consultas/de/' + anoInicio + '/' + mesInicio + '/' + diaInicio + '/ate/' + anoFim + '/' + mesFim + '/' + diaFim);
+			return $http.get(SERVER.url + '/consultas/de/'+anoInicio+'/'+mesInicio+'/'+diaInicio+'/ate/'+anoFim+'/'+mesFim+'/'+diaFim);
 		},
 
-		converterAgendamentos(agendamentos) {
+		converterAgendamentos: function(agendamentos) {
 			var agendamentosConvertidos = [];
 			for (var i = 0; i < agendamentos.length; i++) {
 				var agendamento = agendamentos[i];
@@ -346,19 +345,19 @@ angular.module('easydent.services', [])
 			return agendamentosConvertidos;
 		}
 
-	};
+	}
 })
 
 .service('Util', function () {
 	return {
 
-		clone (obj) {
-			if (obj === null || typeof (obj) !== 'object' || 'isActiveClone' in obj) {
+		clone: function (obj) {
+			if (obj === null || typeof(obj) !== 'object' || 'isActiveClone' in obj) {
 				return obj;
 			}
 
 			if (obj instanceof Date) {
-	        	var temp = new obj.constructor(); // or new Date(obj);
+	        	var temp = new obj.constructor(); //or new Date(obj);
 	        } else {
 	        	var temp = obj.constructor();
 	        }
@@ -372,8 +371,7 @@ angular.module('easydent.services', [])
 	        }
 
 	        return temp;
-	    }
-
-	};
+	    },
+	    
+	}
 })
-;
