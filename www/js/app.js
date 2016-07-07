@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 angular.module('easydent', ['ionic',
   'easydent.controllers', 'easydent.services', 'easydent.directives',
@@ -17,7 +17,7 @@ angular.module('easydent', ['ionic',
       StatusBar.styleDefault();
     }
 
-    window.addEventListener('native.keyboardshow', function(){
+    window.addEventListener('native.keyboardshow', function() {
       document.body.classList.add('keyboard-open');
     });
     // if(window.Connection) {
@@ -33,11 +33,11 @@ angular.module('easydent', ['ionic',
     //       }
     //     });
     //   }
-    // } 
+    // }
 
     // $http.defaults.headers.common['Content-Type'] = 'application/x-www-form-urlencoded';
 
-  })
+  });
 
 })
 
@@ -49,14 +49,14 @@ angular.module('easydent', ['ionic',
     todayLabel: 'Hoje',
     closeLabel: 'Fechar',
     mondayFirst: false,
-    weeksList: ["D", "S", "T", "Q", "Q", "S", "S"],
-    monthsList: ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"],
-    templateType: 'popup',    
+    weeksList: ['D', 'S', 'T', 'Q', 'Q', 'S', 'S'],
+    monthsList: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
+    templateType: 'popup',
     // from: new Date(2016, 1, 1),
     // to: new Date(2018, 8, 1),
     showTodayButton: false,
     dateFormat: 'dd MMMM yyyy',
-    closeOnSelect: true,
+    closeOnSelect: true
     // disableWeekdays: [6]
   };
   ionicDatePickerProvider.configDatePicker(datePickerObj);
@@ -78,11 +78,11 @@ angular.module('easydent', ['ionic',
   $ionicConfigProvider.tabs.style('standard').position('bottom');
   $ionicConfigProvider.navBar.alignTitle('center');
   // $ionicConfigProvider.tabs.style('striped').position('bottom');
-  //$ionicConfigProvider.spinner.icon('dots');
+  // $ionicConfigProvider.spinner.icon('dots');
 
   // $ionicConfigProvider.scrolling.jsScrolling(false);
   // Or for only a single platform, use
-  if( ionic.Platform.isAndroid() ) {
+  if (ionic.Platform.isAndroid()) {
     $ionicConfigProvider.scrolling.jsScrolling(false);
   }
 
@@ -107,12 +107,12 @@ angular.module('easydent', ['ionic',
 
   .state('esqueci-senha', {
     url: '/esqueci-senha',
-    templateUrl: 'templates/esqueci-senha.html',
+    templateUrl: 'templates/esqueci-senha.html'
   })
 
   .state('tab', {
     url: '/tab',
-    params: { reload: false},
+    params: { reload: false },
     abstract: true,
     templateUrl: 'templates/tabs.html'
   })
@@ -140,10 +140,10 @@ angular.module('easydent', ['ionic',
   .state('tab.dentistas', {
     url: '/dentistas',
     views: {
-      'tab-configuracoes':{
+      'tab-configuracoes': {
        templateUrl: 'templates/tabs/dentistas.html',
        controller: 'DentistasCtrl'
-     } 
+     }
    }
  })
 
@@ -161,10 +161,10 @@ angular.module('easydent', ['ionic',
     url: '/dentistas/novo',
 
     views: {
-      'tab-configuracoes':{
+      'tab-configuracoes': {
        templateUrl: 'templates/detail/dentista.html',
        controller: 'DentistaCtrl'
-     } 
+     }
    }
  })
 
@@ -172,30 +172,30 @@ angular.module('easydent', ['ionic',
     url: '/dentistas/edit/:dentistaId',
     // parent: 'tab.dentistas',
     views: {
-      'tab-configuracoes':{
+      'tab-configuracoes': {
        templateUrl: 'templates/detail/dentista.html',
        controller: 'DentistaCtrl'
-     } 
+     }
    }
  })
 
   .state('tab.novolaboratorio', {
     url: '/laboratorios/novo',
     views: {
-      'tab-configuracoes':{
+      'tab-configuracoes': {
        templateUrl: 'templates/detail/laboratorio.html',
        controller: 'LaboratorioCtrl'
-     } 
+     }
    }
  })
 
   .state('tab.editarlaboratorio', {
     url: '/laboratorios/edit/:laboratorioId',
     views: {
-      'tab-configuracoes':{
+      'tab-configuracoes': {
        templateUrl: 'templates/detail/laboratorio.html',
        controller: 'LaboratorioCtrl'
-     } 
+     }
    }
  })
 
@@ -288,7 +288,7 @@ angular.module('easydent', ['ionic',
 
 .factory('AuthInterceptor', function($rootScope, $q, AUTH_EVENTS) {
   return {
-    responseError: function(response) {
+    responseError(response) {
       $rootScope.$broadcast({
         401: AUTH_EVENTS.notAuthenticated,
         403: AUTH_EVENTS.notAuthorized
@@ -304,24 +304,24 @@ angular.module('easydent', ['ionic',
 })
 
 .run(function ($rootScope, $state, AuthService, AUTH_EVENTS) {
-  $rootScope.$on('$stateChangeStart', function (event,next, nextParams, fromState) {
+  $rootScope.$on('$stateChangeStart', function (event, next, nextParams, fromState) {
 
     if ('data' in next && 'authorizedRoles' in next.data) {
       var authorizedRoles = next.data.authorizedRoles;
       if (!AuthService.isAuthorized(authorizedRoles)) {
         event.preventDefault();
         // $state.go($state.current, {}, {reload: true});
-        $state.go('login', {}, {reload: true});
+        $state.go('login', {}, { reload: true });
         $rootScope.$broadcast(AUTH_EVENTS.notAuthorized);
       }
-    }else{
-      console.warn('Permission not defined for state ['+next.name+']')
+    }else {
+      console.warn('Permission not defined for state [' + next.name + ']');
     }
 
     if (!AuthService.isAuthenticated()) {
       if (next.name !== 'login' && next.name !== 'signup') {
         event.preventDefault();
-        $state.go('login'); 
+        $state.go('login');
       }
     }
   });
