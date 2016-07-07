@@ -94,6 +94,157 @@ angular.module('easydent.controllers', [])
 		var listaPacientes = [];
 		var listaHorariosDisponiveis = [];
 
+			});
+
+	function teste () {
+		console.log("Signup");
+	}
+
+	teste();
+
+})
+
+ .controller('NovoAgendamentoCtrl', function($scope, $state, $ionicLoading, $ionicPopup, $ionicHistory, ionicDatePicker, Agendamentos, Dentistas, Pacientes, CalendarService ) {
+
+ 	var dataAgendamento = CalendarService.dataCalendario;
+
+ 	var listaDentistas = [];
+ 	var listaPacientes = [];
+ 	var listaHorariosDisponiveis = [];
+
+ 	function createEmptyAgendamento ()  {
+ 		return {
+ 			dentista: undefined,
+ 			paciente: undefined,
+ 			data: dataAgendamento,
+ 			duracaoMinutos: 30,
+ 			diaCompleto: false,
+ 			agenda: undefined
+ 		}
+ 	};
+
+ 	function carregarPacientes () {
+ 		$ionicLoading.show({
+ 			template: "Loading..."
+ 		});
+ 		Pacientes.todos().then(
+ 			function(response) {
+ 				$scope.pacientes = response.data;
+ 				$ionicLoading.hide();
+ 			}, 
+ 			function () {
+ 				console.error('carregarPacientes');
+ 				$ionicLoading.hide();
+ 			});
+ 	}
+
+ 	function carregarDentistas () {
+ 		Dentistas.todos().then(
+ 			function(response) {
+ 				$scope.dentistas = response.data;
+ 			}, 
+ 			function () {
+ 				console.error('carregarDentistas');
+ 			});
+ 	}
+
+ 	function carregarHorariosDisponiveis (agendamento) {
+ 		$scope.listaHorariosDisponiveis = [];
+ 		if (agendamento && agendamento.dentista && agendamento.data) {
+ 			Dentistas.horariosDisponiveis(0, agendamento.data).then(
+ 				function (response){
+ 					$scope.listaHorariosDisponiveis = response.data;
+ 				}, function (error){
+ 					$scope.listaHorariosDisponiveis = [];
+ 				})	
+ 		}
+ 	}
+
+ 	$scope.carregarHorariosDisponiveis = carregarHorariosDisponiveis;
+
+ 	$scope.novoAgendamento = createEmptyAgendamento();
+ 	$scope.pacientesCallback = function (query, isInitializing) {
+
+ 	}
+
+ 	$scope.showDatePicker = function () {
+ 		ionicDatePicker.openDatePicker({
+ 			inputDate: $scope.novoAgendamento.data || new Date(),
+ 			callback: function (val) {
+ 				console.log("Valor selecionado: " + val + " - " + new Date(val));	
+ 				$scope.novoAgendamento.data = new Date(val);
+ 				carregarHorariosDisponiveis($scope.novoAgendamento);
+ 			}
+ 		});
+ 	}
+
+ 	$scope.salvar = function (novoAgendamento) {
+ 		console.log("Salvar agendamento");
+ 		Agendamentos.salvar(novoAgendamento).then(
+ 			function(response){
+ 				console.log("Success");
+ 				var ag = response.data;
+ 				var data = new Date(ag.data);
+ 				$ionicPopup.alert({
+ 					title: 'Agendamento realizado',
+ 					template: 'Consulta marcada para dia ' + data.toLocaleDateString() + ' as ' +data.toLocaleTimeString()+ ' para o paciente ' + ag.paciente.nome,
+ 				}).then(function () {
+ 					$ionicHistory.goBack();
+ 				});
+ 			}, function (error) {
+ 				console.error("Failed");
+ 			});
+ 	}
+
+ 	function carregarDados () {
+ 		carregarPacientes();
+ 		carregarDentistas();
+ 		carregarHorariosDisponiveis($scope.novoAgendamento);
+ 	}
+
+ 	carregarDados();
+ 	createEmptyAgendamento();
+
+ })
+
+ .controller('EditAgendamentoCtrl', function($scope, $state, $ionicLoading, ionicDatePicker, $ionicHistory, $stateParams, Agendamentos, Dentistas, Pacientes, CalendarService, Util) {
+
+ 	function _clone (obj) {
+ 		if (obj === null || typeof(obj) !== 'object' || 'isActiveClone' in obj) {
+ 			return obj;
+ 		}
+
+ 		if (obj instanceof Date) {
+	    	var temp = new obj.constructor(); //or new Date(obj);
+	    } else {
+	    	var temp = obj.constructor();
+	    }
+
+	    for (var key in obj) {
+	    	if (Object.prototype.hasOwnProperty.call(obj, key)) {
+	    		obj['isActiveClone'] = null;
+	    		temp[key] = _clone(obj[key]);
+	    		delete obj['isActiveClone'];
+	    	}
+	    }
+
+	    return temp;
+	};
+
+	var agendamentoOriginal = undefined;
+	function carregarAgendamento (agendamentoId, callback) {
+		$scope.agendamento = {};
+		Agendamentos.buscar(agendamentoId).then(
+			function(response) {
+				var _agendamento = response.data;
+				_agendamento.data = new Date(_agendamento.data);
+				$scope.agendamento = _agendamento;
+				agendamentoOriginal = _clone($scope.agendamento);
+				if(callback) 
+					callback();
+			}, function (error) {
+>>>>>>> parent of 341e262... Teste VS Code commit.
+
 		function createEmptyAgendamento() {
 			return {
 				dentista: undefined,
