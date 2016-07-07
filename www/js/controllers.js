@@ -100,8 +100,6 @@ angular.module('easydent.controllers', [])
 		console.log("Signup");
 	}
 
-	teste();
-
 })
 
  .controller('NovoAgendamentoCtrl', function($scope, $state, $ionicLoading, $ionicPopup, $ionicHistory, ionicDatePicker, Agendamentos, Dentistas, Pacientes, CalendarService ) {
@@ -243,7 +241,6 @@ angular.module('easydent.controllers', [])
 				if(callback) 
 					callback();
 			}, function (error) {
->>>>>>> parent of 341e262... Teste VS Code commit.
 
 		function createEmptyAgendamento() {
 			return {
