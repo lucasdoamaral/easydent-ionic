@@ -12,8 +12,7 @@
 			<!-- Loading Consultas -->
 			<div ng-if="!carregouUltimosAgendamentos || !carregouAgendamentos">
 				<div class="item" style="text-align: center">
-					<ion-spinner></ion-spinner><br />
-					Carregando agendamentos
+					<ion-spinner></ion-spinner><br /> Carregando agendamentos
 				</div>
 			</div>
 
@@ -22,23 +21,27 @@
 			<div ng-if="carregouUltimosAgendamentos && ultimosAgendamentos.length">
 				<div ng-if="showUltimasConsultas" ng-repeat="(dataString, agendamentos) in ultimosAgendamentos | map: toLocaleDate | groupBy: 'dataString'">
 					<div ng-click="toggleUltimasConsultas()" class="item item-divider">Últimas consultas em {{dataString}}</div>
-					<div ng-repeat="agendamento in agendamentos" class="item item-text-wrap agendamento-antigo">
-						<h3>{{agendamento.data | date : 'HH:mm'}} as {{agendamento.dataFinal | date : 'HH:mm'}}</h3> 
-						<h4>Dr. {{agendamento.dentista.nome}}</h4>
-						<h3>{{agendamento.paciente.nome}} - {{agendamento.procedimento}}</h3>
-						<div class="button-bar">
-							<a class="button button-balanced button-small" ng-click="confirmarComparecimento(agendamento)">
+					<div ng-repeat="agendamento in agendamentos" class="item item-text-wrap item-icon-right">
+						<!--<i class="icon ion-android-close"></i>-->
+						{{agendamento.data | date : 'HH:mm'}} as {{agendamento.dataFinal | date : 'HH:mm'}}
+						{{agendamento.paciente.nome}} - {{agendamento.procedimento}}
+						<h4> Dr. {{agendamento.dentista.nome}}</h4>
+						<!--<div style="margin-top: 10px">-->
+						<!--<a class="button-balanced button-small" ng-click="confirmarComparecimento(agendamento)">
 								<i class="ion-android-done"></i> 
 								Atendido
-							</a>
-							<a class="button button-energized button-small">
-								<!-- <i class="ion-android-close"></i>  -->
-								Cancelada
-							</a>
-							<a class="button button-assertive button-small">
+							</a>-->
+						<!--<a class="button button-balanced button-small">-->
+						<!-- <i class="ion-android-close"></i>  -->
+						<!--Cancelar
+							</a>-->
+						<!--<a class="button button-balanced button-small">
 								Pac. faltou
-							</a>
-						</div>
+							</a>-->
+						<!--</div>-->
+						<!--<button class="button button-balanced">-->
+						<a><i class="icon ion-android-done balanced"></i></a>
+						<!--</button>-->
 					</div>
 				</div>
 			</div>
@@ -48,33 +51,32 @@
 			<div ng-click="toggleProximasConsultas()" ng-if="!showProximasConsultas && proximosAgendamentos.length" class="item item-divider">Próximas consultas</div>
 			<div ng-if="!carregouAgendamentos && proximosAgendamentos.length">
 				<div class="item" style="text-align: center">
-					<ion-spinner></ion-spinner><br />
-					Carregando próximos agendamentos
+					<ion-spinner></ion-spinner><br /> Carregando próximos agendamentos
 				</div>
 			</div>
 			<div ng-if="carregouAgendamentos && proximosAgendamentos.length">
 				<div ng-if="showProximasConsultas" ng-repeat="(dataString, agendamentos) in proximosAgendamentos | map: toLocaleDate | groupBy: 'dataString'">
 					<div ng-click="toggleProximasConsultas()" class="item item-divider card-title">Próximas consultas em {{dataString}}</div>
-					<div ng-repeat="agendamento in agendamentos" >
+					<div ng-repeat="agendamento in agendamentos">
 						<div class="item item-text-wrap">
-							<h3>{{agendamento.data | date : 'HH:mm'}} as {{agendamento.dataFinal | date : 'HH:mm'}}</h3> 
+							<h3>{{agendamento.data | date : 'HH:mm'}} as {{agendamento.dataFinal | date : 'HH:mm'}}</h3>
 							<h4>Dr. {{agendamento.dentista.nome}}</h4>
 							<h3>{{agendamento.paciente.nome}} - {{agendamento.procedimento}}</h3>
 						</div>
 					</div>
 				</div>
-			</p>
+				</p>
 
-		</div>
-
-		<div ng-if="carregouAgendamentos && !proximosAgendamentos.length">
-			<div class="item item-divider">Próximas consultas</div>
-			<div class="item item-text-wrap item-icon-left" >
-				<i class="icon ion-sad-outline"></i> Você não possui agendamentos 
 			</div>
+
+			<div ng-if="carregouAgendamentos && !proximosAgendamentos.length">
+				<div class="item item-divider">Próximas consultas</div>
+				<div class="item item-text-wrap item-icon-left">
+					<i class="icon ion-sad-outline"></i> Você não possui agendamentos
+				</div>
+			</div>
+
 		</div>
 
-	</div>
-
-</ion-content>
+	</ion-content>
 </ion-view>

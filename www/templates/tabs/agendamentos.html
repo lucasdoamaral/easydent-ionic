@@ -10,18 +10,15 @@
 			<div class="button-bar" style="width: 240px; display: -webkit-inline-box;">
 				<button class="button button-balanced button-small" ng-disabled="currentMode('month')" ng-click="changeMode('month')">Mês</button>
 				<button class="button button-balanced button-small" ng-disabled="currentMode('week')" ng-click="changeMode('week')">Semana</button>
-				<!-- <button class="button button-balanced button-small" ng-disabled="currentMode('day')" ng-click="changeMode('day')">Dia</button> -->
+				<button class="button button-balanced button-small" ng-disabled="currentMode('day')" ng-click="changeMode('day')">Dia</button>
 			</div>
-			<button class="button button-balanced button-small right" ng-click="today()" ng-disable="isToday()">Hoje</button>
+			<button class="button button-balanced button-small right" ng-click="today()" ng-disabled="isToday()">Hoje</button>
 		</div>
 
-		<calendar ng-model="calendar.currentDate" calendar-mode="calendar.mode"
-		query-mode="calendar.queryMode" event-source="calendar.eventSource" 
-		range-changed="rangeChanged(startTime, endTime)" event-selected="onEventSelected(event)" 
-		title-changed="onViewTitleChanged(title)" 
-		time-selected="onTimeSelected(selectedTime)"
-		step="15" format-day="dd" format-day-title="EEEE dd/MM/yyyy" format-week-title="MMMM '-' yyyy" format-month-title="MMMM '-' yyyy" 
-		no-events-label="Nenhum agendamento" all-day-label="Dia Todo"></calendar>
+		<calendar ng-model="calendar.currentDate" calendar-mode="calendar.mode" query-mode="calendar.queryMode" event-source="calendar.eventSource"
+			range-changed="rangeChanged(startTime, endTime)" event-selected="onEventSelected(event)" title-changed="onViewTitleChanged(title)"
+			time-selected="onTimeSelected(selectedTime)" step="15" format-day="dd" format-day-title="EEEE dd/MM/yyyy" format-week-title="MMMM '-' yyyy"
+			format-month-title="MMMM '-' yyyy" no-events-label="Nenhum agendamento" ></calendar>
 
 	</ion-content>
 
