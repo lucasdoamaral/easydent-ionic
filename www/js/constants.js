@@ -9,4 +9,4 @@ angular.module('easydent')
 	url: 'http://localhost:8080/easydent-server/rest',
   // url: 'https://easydent-test.underjelastic.com.br/easydent-server/rest',
   // url: 'http://easydent-test.underjelastic.com.br/easydent-server/rest',
-})
+});

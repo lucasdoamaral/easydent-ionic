@@ -2,16 +2,14 @@
     "env": {
         "browser": true
     },
-    
     "globals": {
         "angular": true
     },
-
     // "extends": "eslint:recommended",
     "extends": "angular",
     "rules": {
         "indent": [
-            "error",
+            "off",
             "tab"
         ],
         "linebreak-style": [
@@ -26,6 +24,18 @@
             "error",
             "always"
         ],
-        "angular/controller-name": [2,"/[A-Z].*Ctrl/"]
+        "angular/controller-name": [
+            2,
+            "/[A-Z].*Ctrl/"
+        ],
+        "angular/controller-as": [
+            "off"
+        ],
+        "angular/controller-as-route": [
+            "off"
+        ],
+        "angular/no-service-method": [
+            "off"
+        ]
     }
 }
