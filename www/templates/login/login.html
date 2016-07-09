@@ -4,22 +4,22 @@
 
     <form name="loginForm">
 
-      <h2 class="app-name">Easydent</h2>
-      <h5>Tenha controle total sobre sua agenda</h5>
+      <h2 class="app-name animated fadeIn">Easydent</h2>
+      <h5 class="animated slide fadeIn">Tenha controle total sobre sua agenda</h5>
 
-      <label class="item item-input first-field">
+      <label class="item item-input first-field animated fadeIn">
         <input type="text" name="usuario" placeholder="Informe seu e-mail cadastrado" ng-model="login.usuario" autocorrect="off" autocapitalize="off" autocomplete="off" required>
       </label>
 
-      <label class="item item-input last-field">
+      <label class="item item-input last-field animated fadeIn">
         <input type="password" name="senha" placeholder="Informe a sua senha" ng-model="login.senha" required>
       </label>
 
-      <input type="submit" id="login-button" value="Entrar" class="button button-block button-small button-balanced" ng-click="entrar(login)" />
+      <input type="submit" id="login-button" value="Entrar" class="button button-block button-small button-balanced animated fadeIn" ng-click="entrar(login)" />
       
       <div class="button-bar ">
-        <input type="button" id="forgot-password-button" value="Esqueci a senha" class="button  button-small button-light" ng-click="esqueciSenha()" />
-        <input type="button" id="forgot-password-button" value="Cadastre-se" class="button button-small button-stable" ui-sref="signup" />
+        <input type="button" id="forgot-password-button" value="Esqueci a senha" class="button  button-small button-light animated fadeIn" ng-click="esqueciSenha()" />
+        <input type="button" id="forgot-password-button" value="Cadastre-se" class="button button-small button-stable animated fadeIn" ui-sref="signup" />
       </div>
 
     </form>

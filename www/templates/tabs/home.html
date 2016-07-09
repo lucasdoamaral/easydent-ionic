@@ -42,6 +42,13 @@
 						<!--<button class="button button-balanced">-->
 						<a><i class="icon ion-android-done balanced"></i></a>
 						<!--</button>-->
+
+						<!--<div class="buttons">
+							<a><button class="button assertive button-small ion-android-close"></button></a>
+							<a><button class="button balanced button-small ion-android-done"></button></a>
+						</div>-->
+
+
 					</div>
 				</div>
 			</div>
@@ -58,7 +65,7 @@
 				<div ng-if="showProximasConsultas" ng-repeat="(dataString, agendamentos) in proximosAgendamentos | map: toLocaleDate | groupBy: 'dataString'">
 					<div ng-click="toggleProximasConsultas()" class="item item-divider card-title">Próximas consultas em {{dataString}}</div>
 					<div ng-repeat="agendamento in agendamentos">
-						<div class="item item-text-wrap">
+						<div class="item item-text-wrap animated bounceInRight">
 							<h3>{{agendamento.data | date : 'HH:mm'}} as {{agendamento.dataFinal | date : 'HH:mm'}}</h3>
 							<h4>Dr. {{agendamento.dentista.nome}}</h4>
 							<h3>{{agendamento.paciente.nome}} - {{agendamento.procedimento}}</h3>
