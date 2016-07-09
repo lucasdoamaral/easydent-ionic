@@ -86,7 +86,7 @@ angular.module('easydent.controllers', [])
 
 	})
 
-	.controller('NovoAgendamentoCtrl', function ($scope, $log, $state, $ionicLoading, $ionicPopup, $ionicHistory, ionicDatePicker, Agendamentos, Dentistas, Pacientes, CalendarService) {
+	.controller('NovoAgendamentoCtrl', function ($scope, $log, $state, $ionicLoading, $ionicPopup, $ionicHistory, ionicDatePicker, APP, TimeUtil, Agendamentos, Dentistas, Pacientes, CalendarService) {
 
 		var dataAgendamento = CalendarService.dataCalendario;
 
@@ -94,12 +94,21 @@ angular.module('easydent.controllers', [])
 		var listaPacientes = [];
 		var listaHorariosDisponiveis = [];
 
+		$scope.diasValidos = {
+			'after': 'today',
+			'inclusive': true
+		};
+
 		function createEmptyAgendamento() {
+			if (!dataAgendamento) {
+				dataAgendamento = new Date();
+			}
+			TimeUtil.getDateNextTimeStep(dataAgendamento, APP.stepMinutes);
 			return {
 				dentista: undefined,
 				paciente: undefined,
 				data: dataAgendamento,
-				duracaoMinutos: 30,
+				duracaoMinutos: APP.stepMinutes,
 				diaCompleto: false,
 				agenda: undefined
 			};
@@ -149,17 +158,6 @@ angular.module('easydent.controllers', [])
 
 		};
 
-		$scope.showDatePicker = function () {
-			ionicDatePicker.openDatePicker({
-				inputDate: $scope.novoAgendamento.data || new Date(),
-				callback: function (val) {
-					$log.log('Valor selecionado: ' + val + ' - ' + new Date(val));
-					$scope.novoAgendamento.data = new Date(val);
-					carregarHorariosDisponiveis($scope.novoAgendamento);
-				}
-			});
-		};
-
 		$scope.salvar = function (novoAgendamento) {
 			$log.log('Salvar agendamento');
 			Agendamentos.salvar(novoAgendamento).then(
@@ -189,10 +187,10 @@ angular.module('easydent.controllers', [])
 
 	})
 
-	.controller('EditAgendamentoCtrl', function ($log, $scope, $state, $ionicLoading, ionicDatePicker, $ionicHistory, $stateParams, Agendamentos, Dentistas, Pacientes, CalendarService, Util) {
+	.controller('EditAgendamentoCtrl', function ($log, $scope, $state, $ionicLoading, ionicDatePicker, $ionicHistory, $stateParams, Agendamentos, Dentistas, Pacientes, CalendarService, Util, APP) {
 
 		function _clone(obj) {
-			if (obj === null || angular.isObject (obj) !== 'object' || 'isActiveClone' in obj) {
+			if (obj === null || angular.isObject(obj) !== 'object' || 'isActiveClone' in obj) {
 				return obj;
 			}
 
@@ -213,6 +211,14 @@ angular.module('easydent.controllers', [])
 			return temp;
 		};
 
+		$scope.diminuirDuracao = function (a) {
+			$scope.agendamento.duracaoMinutos -= APP.stepMinutes;
+		};
+
+		$scope.aumentarDuracao = function () {
+			$scope.agendamento.duracaoMinutos += APP.stepMinutes;
+		};
+
 		var agendamentoOriginal = undefined;
 		function carregarAgendamento(agendamentoId, callback) {
 			$scope.agendamento = {};
@@ -228,18 +234,6 @@ angular.module('easydent.controllers', [])
 
 				});
 		}
-
-		$scope.showDatePicker = function () {
-			ionicDatePicker.openDatePicker({
-				inputDate: $scope.agendamento.data || new Date(),
-				callback: function (val) {
-					$log.log('Valor selecionado: ' + val + ' - ' + new Date(val));
-					$scope.agendamento.data = new Date(val);
-					carregarHorariosDisponiveis($scope.agendamento);
-				}
-			});
-		};
-
 
 		$scope.editando = false;
 		$scope.toggleEdicao = function () {
@@ -273,6 +267,7 @@ angular.module('easydent.controllers', [])
 				function (response) {
 					$scope.agendamento = response.data;
 					agendamentoOriginal = _clone($scope.agendamento);
+					$ionicHistory.goBack();
 				}, function (error) {
 
 				});
@@ -352,7 +347,7 @@ angular.module('easydent.controllers', [])
 
 	})
 
-	.controller('AgendamentosCtrl', function ($scope, $log, $ionicPopup, $state, Agendamentos, Dentistas, CalendarService) {
+	.controller('AgendamentosCtrl', function ($scope, $log, $ionicPopup, $state, Agendamentos, Dentistas, CalendarService, APP) {
 
 		var agendamentos = [];
 
@@ -363,7 +358,7 @@ angular.module('easydent.controllers', [])
 
 		var calendar = {
 			mode: 'month',
-			step: 15,
+			step: APP.stepMinutes,
 			eventSource: agendamentos,
 			currentDate: new Date(),
 			queryMode: 'remote'

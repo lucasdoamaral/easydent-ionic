@@ -112,6 +112,45 @@ angular.module('easydent.services', [])
 
 })
 
+.service('TimeUtil', function () {
+
+	var getDateNextTimeStep = function (date, step) {
+
+		var minutes = date.getMinutes();
+		var diff = minutes%step;
+
+		// Se o momento já está no step, não altera a data
+		if (diff === 0) {
+			return date;
+		}
+
+		if (minutes<step) {
+			date.setMinutes(step);
+			return date;
+		}
+
+		minutes += step-diff;
+
+		if (minutes < 60) {
+			date.setMinutes(minutes);
+			return date;
+		}
+
+		date.setMinutes(0);
+		date.setHours(date.getHours() + 1);
+		return date;
+
+	};
+
+	return {
+
+		getDateNextTimeStep: getDateNextTimeStep,
+		
+	};
+
+
+})
+
 .factory('Base64', function($window) {
 	/* jshint ignore:start */
 

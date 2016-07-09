@@ -2,7 +2,7 @@
 
 angular.module('easydent', ['ionic',
   'easydent.controllers', 'easydent.services', 'easydent.directives',
-  'ui.rCalendar', 'ui.mask', 'ngMessages', 'ngLocale', 'angular.filter', 'ionic-datepicker', 'ionic-timepicker'
+  'ui.rCalendar', 'ui.mask', 'ngMessages', 'ngLocale', 'angular.filter', 'ionic-datepicker', 'ionic-timepicker', 'ion-datetime-picker'
 ])
 
   .run(function ($ionicPlatform, $rootScope, $document, $ionicPopup, AuthService, $http, $window) {
@@ -38,8 +38,14 @@ angular.module('easydent', ['ionic',
       // $http.defaults.headers.common['Content-Type'] = 'application/x-www-form-urlencoded';
 
     });
-
   })
+
+.run(function($ionicPickerI18n) {
+        $ionicPickerI18n.weekdays = ['D', 'S', 'T', 'Q', 'Q', 'S', 'S'];
+        $ionicPickerI18n.months = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
+        $ionicPickerI18n.ok = 'Ok';
+        $ionicPickerI18n.cancel = 'Cancelar';
+    })
 
   .config(function (ionicDatePickerProvider, ionicTimePickerProvider) {
 
