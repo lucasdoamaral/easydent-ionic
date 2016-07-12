@@ -35,11 +35,11 @@
         <div class="item item-input" ng-if="!novoAgendamento.diaCompleto">
           <span class="input-label">Duração</span>
           <div style="width: 60%; text-align: right;">
-            <button class="button button-small" ng-click="diminuirDuracao()">-</button>
-            <div class="button button-small" style="background-color: transparent !important; width: 83px;">
+            <button class="button" ng-click="diminuirDuracao()">-</button>
+            <div class="button" style="background-color: transparent !important; width: 83px;">
               {{novoAgendamento.duracaoMinutos | minutesOrHours}}
             </div>
-            <button class="button button-small" ng-click="aumentarDuracao()">+</button>
+            <button class="button" ng-click="aumentarDuracao()">+</button>
           </div>
         </div>
 

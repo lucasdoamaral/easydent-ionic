@@ -12,7 +12,11 @@
         </label>
 
         <label class="item item-input item-label">
-          <input type="text" ng-model="novoUsuario.email" placeholder="Seu e-mail">
+          <input type="text" ng-model="novoUsuario.login" ng-change="checkUsername(novoUsuario.login)" ng-model-options='{ debounce: 1500 }' placeholder="Seu nome de usuário">
+        </label>
+
+        <label class="item item-input item-label">
+          <input type="text" ng-model="novoUsuario.email" ng-change="checkEmail(novoUsuario.email)" ng-model-options='{ debounce: 1500 }' placeholder="Seu e-mail">
         </label>
 
         <label class="item item-input item-label">
@@ -24,22 +28,22 @@
         </label>
 
         <div class="button-bar">
-          <input type="submit" value="Cadastre-se" class="button button-small button-balanced" />
+          <input type="submit" value="Cadastre-se" class="button button-balanced" />
         </div>
 
-        <button class="button button-small button-block button-light icon-left ion-chevron-left" ui-sref="login">
+        <button class="button button-block button-light icon-left ion-chevron-left" ui-sref="login">
           Login
         </button>
 
       </div>
     </form>
 
-<!--     <div class="bar bar-footer bar-balanced">
+    <!--     <div class="bar bar-footer bar-balanced">
       <div style="width: 100%; text-align: center; line-height: 34px;">
         Já possui uma conta?&nbsp<a href="#/login">Entre aqui</a>
       </div>
     </div>
   -->
 
-</ion-content>
+  </ion-content>
 </ion-view>

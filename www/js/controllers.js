@@ -8,16 +8,16 @@ angular.module('easydent.controllers', [])
 
 	.controller('AppCtrl', function ($scope, $log, $state, $ionicPopup, AuthService, AUTH_EVENTS) {
 
-		$scope.$on(AUTH_EVENTS.notAuthorized, function (event) {
-			var alertPopup = $ionicPopup.alert({
-				title: 'Acesso Não Autorizado',
-				template: 'Ops! Você não tem permissão para acessar essas informações',
-				buttons: [{
-					text: 'OK',
-					type: 'button-balanced',
-				}]
-			});
-		});
+		// $scope.$on(AUTH_EVENTS.notAuthorized, function (event) {
+		// 	var alertPopup = $ionicPopup.alert({
+		// 		title: 'Acesso Não Autorizado',
+		// 		template: 'Ops! Você não tem permissão para acessar essas informações',
+		// 		buttons: [{
+		// 			text: 'OK',
+		// 			type: 'button-balanced',
+		// 		}]
+		// 	});
+		// });
 
 		$scope.$on(AUTH_EVENTS.notAuthenticated, function (event) {
 			if (AuthService.isAuthenticated()) {
@@ -45,7 +45,7 @@ angular.module('easydent.controllers', [])
 
 	})
 
-	.controller('SignupCtrl', function ($log, $scope, UsuarioService, $state, $ionicPopup) {
+	.controller('SignupCtrl', function ($log, $scope, UsuarioService, $state, $ionicPopup, BUTTONS) {
 
 		$scope.novoUsuario = {
 			'fgTipoUsuario': 4,
@@ -54,7 +54,63 @@ angular.module('easydent.controllers', [])
 			nome: 'Estabelecimento sem nome',
 		};
 
+		$scope.loginDisponivel = false;
+		$scope.emailDisponivel = false;
+
+		$scope.checkUsername = function (username) {
+			UsuarioService.checkUsername(username).then(
+				function (response) {
+					if (response.data) {
+						$scope.loginDisponivel = true;
+					} else {
+						$scope.loginDisponivel = false;
+						$scope.novoUsuario.login = undefined;
+						$ionicPopup.alert({
+							template: 'Esse nome de usuário não está disponível. Por gentileza, tente outro nome de usuário',
+							buttons: [BUTTONS.ok]
+						});
+					}
+				}, function (error) {
+					// $log.error(error);
+				}
+			);
+		};
+
+		$scope.checkEmail = function (email) {
+			UsuarioService.checkEmail(email).then(
+				function (response) {
+					if (response.data) {
+						$scope.emailDisponivel = true;
+					} else {
+						$scope.emailDisponivel = false;
+						$scope.novoUsuario.email = undefined;
+						$ionicPopup.alert({
+							template: 'Esse e-mail já está cadastrado. Utilize outro e-mail, ou faça login',
+							buttons: [BUTTONS.ok]
+						});
+					}
+				}, function (error) {
+					// $log.error(error);
+				}
+			);
+		};
+
 		$scope.criarUsuario = function (novoUsuario, novoEstabelecimento) {
+
+			if (!$scope.loginDisponivel) {
+				$ionicPopup.alert({
+					title: 'Erro',
+					template: 'Você deve informar um nome de usuário válido para se cadastrar'
+				});
+				return;
+			}
+			if (!$scope.emailDisponivel) {
+				$ionicPopup.alert({
+					title: 'Erro',
+					template: 'Você deve informar um e-mail válido para se cadastrar'
+				});
+				return;
+			}
 
 			// Validar senha e confirmação de senha
 			if (novoUsuario.senha !== novoUsuario.confirmacaoSenha) {
@@ -78,15 +134,9 @@ angular.module('easydent.controllers', [])
 				});
 		};
 
-		function teste() {
-			$log.log('Signup');
-		}
-
-		teste();
-
 	})
 
-	.controller('NovoAgendamentoCtrl', function ($scope, $log, $state, $ionicLoading, $ionicPopup, $ionicHistory, ionicDatePicker, APP, TimeUtil, Agendamentos, Dentistas, Pacientes, CalendarService) {
+	.controller('NovoAgendamentoCtrl', function ($scope, $log, $state, $ionicLoading, $ionicPopup, $ionicHistory, ionicDatePicker, APP, TimeUtil, Agendamentos, Dentistas, Pacientes, CalendarService, BUTTONS) {
 
 		var dataAgendamento = CalendarService.dataCalendario;
 
@@ -114,9 +164,18 @@ angular.module('easydent.controllers', [])
 			};
 		};
 
+		$scope.diminuirDuracao = function (a) {
+			$scope.novoAgendamento.duracaoMinutos -= APP.stepMinutes;
+		};
+
+		$scope.aumentarDuracao = function () {
+			$scope.novoAgendamento.duracaoMinutos += APP.stepMinutes;
+		};
+
+
 		function carregarPacientes() {
 			$ionicLoading.show({
-				template: 'Loading...'
+				template: '<ion-spinner class="spinner-balanced"></ion-spinner><br />Aguarde...'
 			});
 			Pacientes.todos().then(
 				function (response) {
@@ -159,20 +218,45 @@ angular.module('easydent.controllers', [])
 		};
 
 		$scope.salvar = function (novoAgendamento) {
+
+			if (!novoAgendamento.paciente
+				|| !novoAgendamento.dentista
+				|| !novoAgendamento.duracaoMinutos
+				|| !novoAgendamento.procedimento) {
+				$ionicPopup.alert({
+					template: 'Informe todos os campos necessários para agendar uma consulta',
+					buttons: [{
+						text: 'Ok',
+						type: 'button-balanced'
+					}]
+				});
+				return;
+			}
+
 			$log.log('Salvar agendamento');
+			$ionicLoading.show({
+				template: '<ion-spinner class="spinner-balanced"></ion-spinner><br />Aguarde'
+			});
 			Agendamentos.salvar(novoAgendamento).then(
 				function (response) {
-					$log.log('Success');
+					// $log.log('Success');
+					$ionicLoading.hide();
 					var ag = response.data;
 					var data = new Date(ag.data);
 					$ionicPopup.alert({
 						title: 'Agendamento realizado',
 						template: 'Consulta marcada para dia ' + data.toLocaleDateString() + ' as ' + data.toLocaleTimeString() + ' para o paciente ' + ag.paciente.nome,
+						buttons: [BUTTONS.ok]
 					}).then(function () {
 						$ionicHistory.goBack();
 					});
 				}, function (error) {
-					$log.error('Failed');
+					$ionicLoading.hide();
+					$ionicPopup.alert({
+						title: 'Erro',
+						template: error.data.message,
+						buttons: [{ 'text': 'Ok', 'type': 'button-balanced' }]
+					});
 				});
 		};
 
@@ -187,31 +271,9 @@ angular.module('easydent.controllers', [])
 
 	})
 
-	.controller('EditAgendamentoCtrl', function ($log, $scope, $state, $ionicLoading, ionicDatePicker, $ionicHistory, $stateParams, Agendamentos, Dentistas, Pacientes, CalendarService, Util, APP) {
+	.controller('EditAgendamentoCtrl', function ($log, $scope, $state, $ionicLoading, ionicDatePicker, $ionicPopup, $ionicHistory, $stateParams, Agendamentos, Dentistas, Pacientes, CalendarService, Util, APP, BUTTONS) {
 
-		function _clone(obj) {
-			if (obj === null || angular.isObject(obj) !== 'object' || 'isActiveClone' in obj) {
-				return obj;
-			}
-
-			if (obj instanceof Date) {
-				var temp = new obj.constructor(); //or new Date(obj);
-			} else {
-				var temp = obj.constructor();
-			}
-
-			for (var key in obj) {
-				if (Object.prototype.hasOwnProperty.call(obj, key)) {
-					obj['isActiveClone'] = null;
-					temp[key] = _clone(obj[key]);
-					delete obj['isActiveClone'];
-				}
-			}
-
-			return temp;
-		};
-
-		$scope.diminuirDuracao = function (a) {
+		$scope.diminuirDuracao = function () {
 			$scope.agendamento.duracaoMinutos -= APP.stepMinutes;
 		};
 
@@ -220,6 +282,9 @@ angular.module('easydent.controllers', [])
 		};
 
 		var agendamentoOriginal = undefined;
+
+		$scope.agendamentoPassado = false;
+
 		function carregarAgendamento(agendamentoId, callback) {
 			$scope.agendamento = {};
 			Agendamentos.buscar(agendamentoId).then(
@@ -227,7 +292,10 @@ angular.module('easydent.controllers', [])
 					var _agendamento = response.data;
 					_agendamento.data = new Date(_agendamento.data);
 					$scope.agendamento = _agendamento;
-					agendamentoOriginal = _clone($scope.agendamento);
+					agendamentoOriginal = Util.clone($scope.agendamento);
+
+					$scope.agendamentoPassado = _agendamento.data < new Date();
+
 					if (callback)
 						callback();
 				}, function (error) {
@@ -241,35 +309,152 @@ angular.module('easydent.controllers', [])
 		};
 
 		$scope.cancelarConsulta = function (agendamento) {
-			agendamento.fgSituacaoConsultaEnum = 2;
-			Agendamentos.salvar(agendamento).then(
-				function (response) {
-					$ionicHistory.goBack();
-				}, function (error) {
-					$log.error(error);
-				});
+			$ionicPopup.confirm({
+				template: 'Deseja cancelar a consulta do paciente ' + agendamento.paciente.nome + ' ?',
+				buttons: [
+					{ text: 'Não' },
+					{
+						text: 'Sim',
+						type: 'button-assertive',
+						onTap: function () {
+							agendamento.fgSituacaoConsultaEnum = 2;
+							$ionicLoading.show({
+								template: '<ion-spinner class="spinner-balanced"></ion-spinner><br />Aguarde...'
+							});
+							Agendamentos.salvar(agendamento).then(
+								function (response) {
+									$ionicLoading.hide();
+									$ionicPopup.confirm({
+										template: 'Consulta cancelada!',
+										buttons: [
+											{
+												text: 'Ok',
+												type: 'button-balanced',
+												onTap: function () {
+													$ionicHistory.goBack();
+												}
+											}]
+									});
+								},
+								function (error) {
+									$ionicLoading.hide();
+								}
+							);
+						}
+					}]
+			});
 		};
+
+		$scope.pacienteFaltou = function (agendamento) {
+			$ionicPopup.confirm({
+				title: 'Paciente Faltou',
+				template: 'O paciente ' + agendamento.paciente.nome + ' faltou na consulta?',
+				buttons: [
+					{ text: 'Cancelar' },
+					{
+						text: 'Sim, faltou',
+						type: 'button-assertive',
+						onTap: function (e) {
+							$ionicLoading.show({
+								template: '<ion-spinner class="spinner-balanced"></ion-spinner><br />Aguarde...'
+							});
+							agendamento.fgSituacaoConsultaEnum = 3;
+							Agendamentos.salvar(agendamento).then(
+								function (response) {
+									$ionicLoading.hide();
+									$ionicPopup.confirm({
+										template: 'Ausência registrada.',
+										buttons: [{
+											text: 'Ok',
+											type: 'button-balanced',
+											onTap: function () {
+												$ionicHistory.goBack();
+											}
+										}]
+									});
+								}, function (error) {
+									$ionicLoading.hide();
+								}
+							);
+						}
+					}
+				]
+			});
+		};
+
 		$scope.confirmarComparecimento = function (agendamento) {
-			agendamento.fgSituacaoConsultaEnum = 1;
-			Agendamentos.salvar(agendamento).then(
-				function (response) {
-					$ionicHistory.goBack();
-				}, function (error) {
-					$log.error(error);
-				});
+			$ionicPopup.confirm({
+				title: 'Comparecimento',
+				template: 'O paciente ' + agendamento.paciente.nome + ' compareceu à consulta?',
+				buttons: [{
+					text: 'Cancelar',
+				},
+					{
+						text: 'Sim',
+						type: 'button-balanced',
+						onTap: function (e) {
+							$ionicLoading.show({
+								template: '<ion-spinner class="spinner-balanced"></ion-spinner><br />Aguarde...'
+							});
+							agendamento.fgSituacaoConsultaEnum = 1;
+							Agendamentos.salvar(agendamento).then(
+								function (response) {
+									$ionicLoading.hide();
+									$ionicPopup.show({
+										template: 'Atendimento registrado com sucesso!',
+										buttons: [BUTTONS.ok]
+									}).then(function () {
+										$ionicHistory.goBack();
+									});
+								}, function (error) {
+									$ionicLoading.hide();
+								});
+						}
+					}]
+			});
 		};
+
+
+
 		$scope.descartarAlteracoes = function () {
-			$scope.agendamento = _clone(agendamentoOriginal);
+			$scope.agendamento = Util.clone(agendamentoOriginal);
 			$scope.editando = false;
 		};
 		$scope.concluirEdicao = function () {
-			Agendamentos.salvar($scope.agendamento).then(
+			$ionicLoading.show({
+				template: '<ion-spinner class="spinner-balanced"></ion-spinner><br />Aguarde...'
+			});
+
+			var agendamento = $scope.agendamento;
+
+			if (!agendamento.paciente
+				|| !agendamento.dentista
+				|| !agendamento.duracaoMinutos
+				|| !agendamento.procedimento) {
+				$ionicPopup.alert({
+					template: 'Informe todos os campos necessários para agendar uma consulta',
+					buttons: [{
+						text: 'Ok',
+						type: 'button-balanced'
+					}]
+				});
+				return;
+			}
+
+
+			Agendamentos.salvar(agendamento).then(
 				function (response) {
 					$scope.agendamento = response.data;
-					agendamentoOriginal = _clone($scope.agendamento);
+					agendamentoOriginal = Util.clone($scope.agendamento);
 					$ionicHistory.goBack();
+					$ionicLoading.hide();
 				}, function (error) {
-
+					$ionicLoading.hide();
+					$ionicPopup.alert({
+						title: 'Erro',
+						template: error.data.message,
+						buttons: [{ 'text': 'Ok', 'type': 'button-balanced' }]
+					});
 				});
 		};
 
@@ -279,7 +464,7 @@ angular.module('easydent.controllers', [])
 
 		function carregarPacientes(callback) {
 			$ionicLoading.show({
-				template: 'Loading...'
+				template: '<ion-spinner class="spinner-balanced"></ion-spinner><br />Aguarde...'
 			});
 			Pacientes.todos().then(
 				function (response) {
@@ -321,24 +506,10 @@ angular.module('easydent.controllers', [])
 		}
 		$scope.carregarHorariosDisponiveis = carregarHorariosDisponiveis;
 
-		$scope.salvar = function (novoAgendamento) {
-			$log.log('Salvar agendamento');
-			Agendamentos.salvar(agendamento).then(
-				function () {
-					$log.log('Success');
-					$ionicHistory.goBack();
-					//('tab.agendamentos');
-				}, function () {
-					$log.error('Failed');
-				});
-		};
-
 		function carregarDados() {
 			carregarPacientes(function () {
 				carregarDentistas(function () {
-					carregarAgendamento($stateParams.agendamentoId, function () {
-						carregarHorariosDisponiveis($scope.agendamento);
-					});
+					carregarAgendamento($stateParams.agendamentoId);
 				});
 			});
 		};
@@ -347,14 +518,40 @@ angular.module('easydent.controllers', [])
 
 	})
 
-	.controller('AgendamentosCtrl', function ($scope, $log, $ionicPopup, $state, Agendamentos, Dentistas, CalendarService, APP) {
+	.controller('AgendamentosCtrl', function ($scope, $timeout, $log, $ionicLoading, $ionicPopup, $state, Agendamentos, Dentistas, CalendarService, APP) {
 
 		var agendamentos = [];
 
-		var eventSelected = false;
+		var estaExibindoEvento = false;
 		$scope.$on('$ionicView.enter', function (e) {
-			var eventSelected = false;
+			if ($scope.start && $scope.end) {
+				buscarNoPeriodo($scope.start, $scope.end);
+				// $scope.$broadcast('eventSourceChanged', $scope.calendar.eventSource);
+			}
 		});
+
+		var buscarNoPeriodo = function (start, end) {
+
+			// Ajusta para -1 dia, pois não deve trazer o último dia
+			// end.setDate(end.getDate() - 1);
+			$ionicLoading.show({
+				template: '<ion-spinner class="spinner-balanced"></ion-spinner><br />Aguarde...'
+			});
+			Agendamentos.buscarNoPeriodo(start, end).then(
+				function (response) {
+					var agendamentos = response.data;
+					$ionicLoading.hide();
+					var _agendamentos = Agendamentos.converterAgendamentos(agendamentos);
+					$scope.calendar.eventSource = _agendamentos;
+					$scope.$broadcast('eventSourceChanged', _agendamentos);
+
+					$scope.start = start;
+					$scope.end = end;
+
+				}, function (error) {
+					$ionicLoading.hide();
+				});
+		};
 
 		var calendar = {
 			mode: 'month',
@@ -364,65 +561,73 @@ angular.module('easydent.controllers', [])
 			queryMode: 'remote'
 		};
 
-		$scope.viewTitle = 'Agendamentos';
-
-		$scope.novoAgendamento = function () {
-			CalendarService.dataCalendario = $scope.calendar.currentDate;
-			$log.log('novoAgendamento called');
-			$state.go('tab.novoagendamento');//, {dataAgendamento: $scope.calendar.currentDate});
-			eventSelected = false;
+		$scope.cancelarConsulta = function (agendamento) {
+			$ionicPopup.confirm({
+				title: 'Confirmação',
+				template: 'Deseja cancelar essa consulta?'
+			}).then(function (res) {
+				if (res) {
+					agendamento.fgSituacaoConsultaEnum = 2;
+					$ionicLoading.show({
+						template: '<ion-spinner class="spinner-balanced"></ion-spinner><br />Aguarde...'
+					});
+					Agendamentos.salvar(Agendamentos).then(
+						function (response) {
+							$ionicLoading.hide();
+							$ionicPopup.show({ message: 'Consulta cancelada!' });
+							$ionicHistory.goBack();
+						},
+						function (error) {
+							$ionicLoading.hide();
+						}
+					);
+				}
+			});
 		};
 
-		// View
+		$scope.viewTitle = 'Agendamentos';
+
+		$scope.novoAgendamento = function (dataNovoAgendamento) {
+			CalendarService.dataCalendario = dataNovoAgendamento;
+			$log.log('novoAgendamento called');
+			$state.go('tab.novoagendamento');//, {dataAgendamento: $scope.calendar.currentDate});
+		};
+
 		$scope.changeMode = function (mode) {
-			// $log.log('Event: changeMode');
 			$scope.calendar.mode = mode;
 		};
 		$scope.currentMode = function (mode) {
 			return $scope.calendar.mode == mode;
 		};
 		$scope.onViewTitleChanged = function (title) {
-			// $log.log('Event: onViewTitleChanged');
 			$scope.viewTitle = title;
 		};
 
 		// Events
 		$scope.onEventSelected = function (event) {
-			$log.log('Event: onEventSelected:' + event.startTime + '-' + event.endTime + ',' + event.title);
-			eventSelected = true;
-			// $log.warn('Implementar onEventSelected');
+			estaExibindoEvento = true;
+			$timeout(function () {
+				estaExibindoEvento = false;
+			}, 2000);
+			// $log.log('Event: onEventSelected:' + event.startTime + '-' + event.endTime + ',' + event.title);
+			// eventSelected = true;
 			$state.go('tab.editaragendamento', { agendamentoId: event.id });
+
 		};
 		$scope.onTimeSelected = function (selectedTime) {
-			if (!eventSelected) {
-				$log.log('Event: onTimeSelected: ' + selectedTime);
-				// $scope.calendar.currentDate = selectedTime;
+			if (!estaExibindoEvento) {
+				// $log.log('Event: onTimeSelected: ' + selectedTime);
+				//  $scope.calendar.currentDate = selectedTime;
 				if (calendar.mode !== 'month') {
-					$scope.novoAgendamento();
+					$scope.novoAgendamento(selectedTime);
 				}
 			}
 		};
-		$scope.rangeChanged = function (start, end) {
-			eventSelected = false;
-			// $log.log('Event: rangeChanged: ' + start.toLocaleDateString() + ' ' + end.toLocaleDateString());
-			// Ajusta para -1 dia, pois não deve trazer o último dia
-			end.setDate(end.getDate() - 1);
-			Agendamentos.buscarNoPeriodo(start, end).then(
-				function (response) {
-					$scope.calendar.eventSource = Agendamentos.converterAgendamentos(response.data);
-				}, function (error) {
-					$ionicPopup.alert({
-						title: 'Erro',
-						template: error
-					});
-				});
-		};
+		$scope.rangeChanged = buscarNoPeriodo;
 
 		// Today checks
 		$scope.today = function () {
 			$scope.calendar.currentDate = new Date();
-			eventSelected = false;
-
 		};
 		$scope.isToday = function () {
 			var today = new Date();
@@ -435,9 +640,130 @@ angular.module('easydent.controllers', [])
 
 		$scope.calendar = calendar;
 
+		var _tempDateInicial = new Date();
+		_tempDateInicial.setDate(1);
+		var _tempDateFinal = new Date();
+		_tempDateFinal.setDate(31);
+
+		// buscarNoPeriodo(_tempDateInicial, _tempDateFinal);
+
 	})
 
-	.controller('PacientesCtrl', function ($scope, $stateParams, Pacientes, $ionicActionSheet, $ionicPopup, $state) {
+	.controller('AccountCtrl', function ($scope, $ionicLoading, $ionicPopup, $log, $stateParams, $ionicHistory, UsuarioService) {
+
+		$scope.usuario = {};
+		$scope.alterarSenha = false;
+
+		function buscarUsuario() {
+			$ionicLoading.show({
+				template: '<ion-spinner class="spinner-balanced"></ion-spinner><br />Aguarde...'
+			});
+			UsuarioService.buscarUsuarioLogado().then(
+				function (response) {
+					$scope.usuario = response.data;
+					$ionicLoading.hide();
+				}, function (error) {
+					$log(error.data.message);
+					$ionicLoading.hide();
+				}
+			);
+		};
+
+		function clearPasswordFields() {
+			$scope.alterarSenha = false;
+			$scope.usuario.senha = undefined;
+			$scope.usuario.confirmacaoSenha = undefined;
+		};
+
+		buscarUsuario();
+
+		$scope.salvar = function (usuario) {
+			$ionicLoading.show({
+				template: '<ion-spinner class="spinner-balanced"></ion-spinner><br />Aguarde...'
+			});
+			UsuarioService.salvar(usuario).then(
+				function (response) {
+					$ionicHistory.goBack();
+					$ionicPopup.alert({
+						template: 'Usuário alterado!',
+						buttons: [{
+							text: 'Ok', type: 'button-balanced', onTap: function (e) {
+
+							}
+						}]
+					});
+					$ionicLoading.hide();
+				}, function (error) {
+					$ionicLoading.hide();
+				});
+		};
+
+		var changePassword = function (usuario) {
+
+			if (!usuario.senhaAtual) {
+				$ionicPopup.alert({ template: 'Informe a senha atual' });
+				return;
+			}
+
+			if (!usuario.senha || !usuario.confirmacaoSenha) {
+				$ionicPopup.alert({ template: 'Informe a nova senha e a confirmação' });
+				return;
+			}
+
+			if (usuario.senha !== usuario.confirmacaoSenha) {
+				$ionicPopup.alert({ template: 'A senha e a confirmação não são iguais!' });
+				return;
+			}
+
+			$ionicLoading.show({
+				template: '<ion-spinner class="spinner-balanced"></ion-spinner><br />Aguarde...'
+			});
+
+			var alteracaoSenha = {
+				login: usuario.login,
+				senhaAtual: $scope.usuario.senhaAtual,
+				novaSenha: $scope.usuario.senha
+			};
+
+			UsuarioService.alterarSenha(alteracaoSenha).then(
+				function (response) {
+					$scope.usuario.senhaAtual = undefined;
+					$ionicLoading.hide();
+					$ionicPopup.alert({
+						template: 'Senha alterada com sucesso!',
+						buttons: [{
+							text: 'Ok',
+							type: 'button-balanced',
+							onTap: function () {
+								clearPasswordFields();
+							}
+						}]
+					});
+				}, function (error) {
+					$ionicLoading.hide();
+					$ionicPopup.alert({
+						title: 'Erro', template: error.data.message,
+						buttons: [{
+							text: 'Ok',
+							type: 'button-balanced'
+						}]
+					});
+				});
+		};
+		$scope.changePassword = changePassword;
+
+		$scope.cancelPasswordChange = function () {
+			$scope.alterarSenha = false;
+			clearPasswordFields();
+		};
+
+		$scope.togglePasswordChange = function () {
+			$scope.alterarSenha = !$scope.alterarSenha;
+		};
+
+	})
+
+	.controller('PacientesCtrl', function ($scope, $log, $stateParams, Pacientes, $ionicActionSheet, $ionicPopup, $state) {
 
 		$scope.listaCarregadaSemErros = false;
 		$scope.listaCarregadaComErros = false;
@@ -485,20 +811,26 @@ angular.module('easydent.controllers', [])
 				destructiveButtonClicked: function () {
 					Pacientes.excluir(paciente.id).then(
 						function () {
-							$log.log('Exclusão funcionou.');
+							// $log.log('Exclusão funcionou.');
 							carregarPacientes();
-						},
-						function () {
-							$ionicPopup.alert({
-								title: 'Não foi possível excluir o paciente',
-								template: 'Você não pode excluir um paciente que já possui agendamentos',
+							$ionicPopup.show({
+								template: 'Paciente excluído!',
 								buttons: [{
-									text: 'OK',
+									text: 'Ok',
+									type: 'button-balanced'
+								}]
+							});
+						}, function (error) {
+							$ionicPopup.alert({
+								title: 'Erro',
+								template: error.data.message,
+								buttons: [{
+									text: 'Ok',
 									type: 'button-balanced',
 								}]
 
 							});
-							$log.log('Exclusão falhou.');
+							// $log.log('Exclusão falhou.');
 						});
 					return true;
 				},
@@ -519,7 +851,10 @@ angular.module('easydent.controllers', [])
 
 	.controller('LoginCtrl', function ($scope, $state, $ionicPopup, $ionicLoading, $timeout, LoginService, AuthService) {
 
-		$scope.login = {};
+		$scope.$on('$ionicView.enter', function (e) {
+			$scope.login = {};
+		});
+
 		$scope.hasError = false;
 
 		// var isLogging = false;
@@ -531,7 +866,7 @@ angular.module('easydent.controllers', [])
 			if (data.usuario && data.senha) {
 				// isLogging = true;
 				$ionicLoading.show({
-					template: '<ion-spinner class="spinner-balanced"></ion-spinner><br />Realizando login'
+					template: '<ion-spinner class="spinner-balanced"></ion-spinner><br />Aguarde...'
 				});
 
 				AuthService.entrar(data.usuario, data.senha).then(
@@ -594,13 +929,13 @@ angular.module('easydent.controllers', [])
 
 	})
 
-	.controller('PacienteDetailCtrl', function ($scope, $stateParams, Pacientes, $ionicLoading, $ionicHistory, $state) {
+	.controller('PacienteDetailCtrl', function ($scope, $stateParams, $ionicPopup, Pacientes, $ionicLoading, $ionicHistory, $state) {
 
 		$scope.paciente = {};
 		if ($stateParams.pacienteId) {
 			$scope.nomePaciente = ' ';
 			$ionicLoading.show({
-				template: '<ion-spinner class="spinner-balanced"></ion-spinner><br />Aguarde'
+				template: '<ion-spinner class="spinner-balanced"></ion-spinner><br />Aguarde...'
 			});
 			Pacientes.buscar($stateParams.pacienteId).success(function (response) {
 				$scope.paciente = response;
@@ -613,17 +948,41 @@ angular.module('easydent.controllers', [])
 		}
 
 		$scope.salvar = function () {
+
+			var paciente = $scope.paciente;
+
+			if (!paciente.nome) {
+				$ionicPopup.show({
+					template: 'Informe todos os campos necessários para criar um paciente!',
+					buttons: [{
+						text: 'Ok',
+						type: 'button-balanced'
+					}]
+				});
+				return;
+			}
+
 			// $log.log("SALVAR PACIENTE")
 			$ionicLoading.show({
-				template: '<ion-spinner class="spinner-balanced"></ion-spinner><br />Aguarde'
+				template: '<ion-spinner class="spinner-balanced"></ion-spinner><br />Aguarde...'
 			});
+			var mensagem = paciente.id ? 'Paciente alterado' : 'Paciente cadastrado';
 			Pacientes.salvar($scope.paciente).then(
-				function () {
+				function (response) {
 					// $log.log("Salvo com sucesso.");
-					$ionicHistory.goBack();
 					$ionicLoading.hide();
+					$ionicPopup.show({
+						template: mensagem,
+						buttons: [{
+							text: 'Ok',
+							type: 'button-balanced',
+							onTap: function (e) {
+								$ionicHistory.goBack();
+							}
+						}]
+					});
 				},
-				function () {
+				function (error) {
 					// $log.log("Erro ao salvar.");
 					$ionicLoading.hide();
 				});
@@ -631,7 +990,7 @@ angular.module('easydent.controllers', [])
 
 	})
 
-	.controller('DentistasCtrl', function ($scope, $stateParams, Dentistas, $ionicActionSheet, $state) {
+	.controller('DentistasCtrl', function ($scope, $log, $ionicPopup, $stateParams, Dentistas, $ionicActionSheet, $state) {
 
 		$scope.listaCarregadaSemErros = false;
 		$scope.listaCarregadaComErros = false;
@@ -678,11 +1037,25 @@ angular.module('easydent.controllers', [])
 				destructiveButtonClicked: function () {
 					Dentistas.excluir(dentista.id).then(
 						function () {
+							$ionicPopup.show({
+								template: 'Dentista excluído!',
+								buttons: [{
+									text: 'Ok',
+									type: 'button-balanced'
+								}]
+							});
 							carregarDentistas();
-							$log.log('Exclusão do dentista [' + dentista.nome + ']');
+							// $log.log('Exclusão do dentista [' + dentista.nome + ']');
 						},
 						function (error) {
-							$log.error(error);
+							$ionicPopup.show({
+								title: 'Erro',
+								template: error.data.message,
+								buttons: [{
+									text: 'Ok',
+									type: 'button-balanced'
+								}]
+							});
 						});
 					return true;
 
@@ -698,7 +1071,7 @@ angular.module('easydent.controllers', [])
 
 	})
 
-	.controller('DentistaCtrl', function ($scope, $stateParams, $state, $ionicLoading, $ionicHistory, ionicTimePicker, Dentistas) {
+	.controller('DentistaCtrl', function ($scope, $log, $ionicPopup, $stateParams, $state, $ionicLoading, $ionicHistory, ionicTimePicker, Dentistas) {
 
 		$scope.dentista = {
 			// horarios: [
@@ -714,7 +1087,7 @@ angular.module('easydent.controllers', [])
 
 		if ($stateParams.dentistaId) {
 			$ionicLoading.show({
-				template: '<ion-spinner class="spinner-balanced"></ion-spinner><br />Buscando dentista'
+				template: '<ion-spinner class="spinner-balanced"></ion-spinner><br />Aguarde...'
 			});
 			Dentistas.buscar($stateParams.dentistaId).then(
 				function (response) {
@@ -722,14 +1095,28 @@ angular.module('easydent.controllers', [])
 					$ionicLoading.hide();
 				},
 				function (error) {
-					$log.error(error);
+					// $log.error(error);
 					$ionicLoading.hide();
 				});
 		}
 
 		function salvar(dentista) {
+
+			if (!dentista.cro
+				|| !dentista.estadoCRO
+				|| !dentista.nome) {
+				$ionicPopup.show({
+					template: 'Informe todos os campos necessários para cadastrar o dentista',
+					buttons: [{
+						text: 'Ok',
+						type: 'button-balanced'
+					}]
+				});
+				return;
+			}
+
 			$ionicLoading.show({
-				template: '<ion-spinner class="spinner-balanced"></ion-spinner><br />Salvando dentista'
+				template: '<ion-spinner class="spinner-balanced"></ion-spinner><br />Aguarde...'
 			});
 			Dentistas.salvar(dentista).then(
 				function (response) {
@@ -738,7 +1125,7 @@ angular.module('easydent.controllers', [])
 				},
 				function (error) {
 					$ionicLoading.hide();
-					$log.error(error);
+					// $log.error(error);
 				});
 		};
 
@@ -923,7 +1310,7 @@ angular.module('easydent.controllers', [])
 
 	.controller('ConsultasCtrl', function ($scope, $stateParams, Consultas) {
 		$ionicLoading.show({
-			template: '<ion-spinner class="spinner-balanced"></ion-spinner><br />Buscando consultas'
+			template: '<ion-spinner class="spinner-balanced"></ion-spinner><br />Aguarde...'
 		});
 		Consultas.todas().success(function (response) {
 			$scope.consultas = response;
@@ -979,10 +1366,10 @@ angular.module('easydent.controllers', [])
 					Laboratorios.excluir(laboratorio.id).then(
 						function () {
 							carregarLaboratorios();
-							$log.log('Exclusão do laboratório [' + laboratorio.nome + ']');
+							// $log.log('Exclusão do laboratório [' + laboratorio.nome + ']');
 						},
 						function (error) {
-							$log.error(error);
+							// $log.error(error);
 						});
 					return true;
 
@@ -1008,7 +1395,7 @@ angular.module('easydent.controllers', [])
 		$scope.laboratorio = {};
 		if ($stateParams.laboratorioId) {
 			$ionicLoading.show({
-				template: '<ion-spinner class="spinner-balanced"></ion-spinner><br />Buscando laboratório'
+				template: '<ion-spinner class="spinner-balanced"></ion-spinner><br />Aguarde...'
 			});
 			Laboratorios.buscar($stateParams.laboratorioId).then(
 				function (response) {
@@ -1017,13 +1404,13 @@ angular.module('easydent.controllers', [])
 				},
 				function (error) {
 					$ionicLoading.hide();
-					$log.error(error);
+					// $log.error(error);
 				});
 		}
 
 		function salvar(laboratorio) {
 			$ionicLoading.show({
-				template: '<ion-spinner class="spinner-balanced"></ion-spinner><br />Aguarde'
+				template: '<ion-spinner class="spinner-balanced"></ion-spinner><br />Aguarde...'
 			});
 			Laboratorios.salvar(laboratorio).then(
 				function (response) {
@@ -1031,7 +1418,7 @@ angular.module('easydent.controllers', [])
 					$ionicLoading.hide();
 				},
 				function (error) {
-					$log.error(error);
+					// $log.error(error);
 					$ionicLoading.hide();
 				});
 		};
@@ -1048,7 +1435,7 @@ angular.module('easydent.controllers', [])
 		function buscarConsulta(id) {
 			$scope.consulta = undefined;
 			$ionicLoading.show({
-				template: 'Loading...'
+				template: '<ion-spinner class="spinner-balanced"></ion-spinner><br />Aguarde...'
 			});
 			Agendamentos.buscar(id).then(
 				function (response) {
@@ -1089,6 +1476,14 @@ angular.module('easydent.controllers', [])
 			$scope.tokenValue = AuthService.token();
 		});
 
+		$scope.refreshData = function () {
+			carregarUltimosAgendamentos(function () {
+				carregarProximosAgendamentos(function () {
+					$scope.$broadcast('scroll.refreshComplete');
+				});
+			});
+		};
+
 		$scope.showUltimasConsultas = true;
 		$scope.toggleUltimasConsultas = function () {
 			$scope.showUltimasConsultas = !$scope.showUltimasConsultas;
@@ -1099,13 +1494,15 @@ angular.module('easydent.controllers', [])
 			$scope.showProximasConsultas = !$scope.showProximasConsultas;
 		};
 
-		function carregarUltimosAgendamentos() {
+		function carregarUltimosAgendamentos(callback) {
 			$scope.carregouUltimosAgendamentos = false;
 			$scope.ultimosAgendamentos = [];
 			Agendamentos.ultimos(5).then(
 				function (response) {
 					$scope.ultimosAgendamentos = response.data;
 					$scope.carregouUltimosAgendamentos = true;
+					if (callback)
+						callback();
 				}, function (error) {
 					// $ionicPopup.alert({
 					// 	title: 'Erro',
@@ -1115,13 +1512,15 @@ angular.module('easydent.controllers', [])
 				});
 		}
 
-		function carregarProximosAgendamentos() {
+		function carregarProximosAgendamentos(callback) {
 			$scope.carregouAgendamentos = false;
 			$scope.proximosAgendamentos = [];
 			Agendamentos.proximos(5).then(
 				function (response) {
 					$scope.proximosAgendamentos = response.data;
 					$scope.carregouAgendamentos = true;
+					if (callback)
+						callback();
 				},
 				function (error) {
 					// $ionicPopup.alert({
@@ -1160,15 +1559,13 @@ angular.module('easydent.controllers', [])
 					}]
 			});
 		};
-		$scope.confirmarCancelamento = function (agendamento) {
 
-		};
 		$scope.confirmarAusencia = function (agendamento) {
 
 		};
 
-		carregarProximosAgendamentos();
-		carregarUltimosAgendamentos();
+		// carregarProximosAgendamentos();
+		// carregarUltimosAgendamentos();
 
 	})
 

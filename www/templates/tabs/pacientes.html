@@ -24,8 +24,8 @@
       </ion-item>
 
       <ion-item class="item-icon-left" ng-repeat="paciente in pacientes" on-hold="pacienteHold({{paciente}})" href="#tab/pacientes/{{paciente.id}}">
-
-        <i class="icon ion-person"></i>{{paciente.nome}} 
+        <i class="icon ion-person"></i>
+        {{paciente.nome}} 
         <span class="item-note">{{paciente.celular || paciente.telefone | tel}}</span>
 
       </ion-item>

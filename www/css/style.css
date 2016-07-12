@@ -63,7 +63,7 @@ h2.app-name {
 }
 
 #forgot-password-button {
-  font-weight: bold;
+  /* font-weight: bold; */
   padding: 0px 25px;
 }
 
@@ -129,6 +129,17 @@ th.weekview-header {
   font-size: 10px !important;
 }
 
+/* Detalhe na visão por dia */
+td.event-detail.ng-binding, td.monthview-eventdetail-timecolumn.ng-binding {
+  border: none !important;
+}
+
+td.monthview-eventdetail-timecolumn.ng-binding {
+    width: 80px;
+    padding: 5px 2px;
+    box-sizing: content-box;
+    line-height: 26px;
+}
 
 /* Geral */
 
@@ -230,4 +241,8 @@ body.keyboard-open .has-footer{
   /* box-sizing: border-box; */
   margin: 1px;
   background-color: #dedede;
+}
+
+.keyboard-open .has-footer {
+bottom: 0;
 }

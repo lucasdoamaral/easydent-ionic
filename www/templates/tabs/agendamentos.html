@@ -1,12 +1,12 @@
 <ion-view class="titulo-agendamentos" ng-controller="AgendamentosCtrl" view-title={{viewTitle}}>
 
 	<ion-nav-buttons side="right">
-		<button class="button button-small" ng-click="novoAgendamento()">Novo</button>
+		<button class="button button-small" ng-click="novoAgendamento(calendar.currentDate)">Novo</button>
 	</ion-nav-buttons>
 
 	<ion-content scroll="false" class="main-content">
 
-		<div class="calendar-bar padding">
+		<div class="calendar-bar padding animated slideInUp">
 			<div class="button-bar" style="width: 240px; display: -webkit-inline-box;">
 				<button class="button button-balanced button-small" ng-disabled="currentMode('month')" ng-click="changeMode('month')">Mês</button>
 				<button class="button button-balanced button-small" ng-disabled="currentMode('week')" ng-click="changeMode('week')">Semana</button>
@@ -15,10 +15,10 @@
 			<button class="button button-balanced button-small right" ng-click="today()" ng-disabled="isToday()">Hoje</button>
 		</div>
 
-		<calendar ng-model="calendar.currentDate" calendar-mode="calendar.mode" query-mode="calendar.queryMode" event-source="calendar.eventSource"
-			range-changed="rangeChanged(startTime, endTime)" event-selected="onEventSelected(event)" title-changed="onViewTitleChanged(title)"
-			time-selected="onTimeSelected(selectedTime)" step="15" format-day="dd" format-day-title="EEEE dd/MM/yyyy" format-week-title="MMMM '-' yyyy"
-			format-month-title="MMMM '-' yyyy" no-events-label="Nenhum agendamento" ></calendar>
+		<calendar ng-model="calendar.currentDate" calendar-mode="calendar.mode" query-mode="calendar.queryMode"
+			event-source="calendar.eventSource" range-changed="rangeChanged(startTime, endTime)" event-selected="onEventSelected(event)"
+			title-changed="onViewTitleChanged(title)" time-selected="onTimeSelected(selectedTime)" step="15" format-day="dd" format-day-title="EEEE dd/MM/yyyy"
+			format-week-title="MMMM '-' yyyy" format-month-title="MMMM '-' yyyy" no-events-label="Nenhum agendamento"></calendar>
 
 	</ion-content>
 

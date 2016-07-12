@@ -40,12 +40,12 @@ angular.module('easydent', ['ionic',
     });
   })
 
-.run(function($ionicPickerI18n) {
-        $ionicPickerI18n.weekdays = ['D', 'S', 'T', 'Q', 'Q', 'S', 'S'];
-        $ionicPickerI18n.months = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
-        $ionicPickerI18n.ok = 'Ok';
-        $ionicPickerI18n.cancel = 'Cancelar';
-    })
+  .run(function ($ionicPickerI18n) {
+    $ionicPickerI18n.weekdays = ['D', 'S', 'T', 'Q', 'Q', 'S', 'S'];
+    $ionicPickerI18n.months = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
+    $ionicPickerI18n.ok = 'Ok';
+    $ionicPickerI18n.cancel = 'Cancelar';
+  })
 
   .config(function (ionicDatePickerProvider, ionicTimePickerProvider) {
 
@@ -111,11 +111,6 @@ angular.module('easydent', ['ionic',
         controller: 'SignupCtrl'
       })
 
-      // .state('esqueci-senha', {
-      //   url: '/esqueci-senha',
-      //   templateUrl: 'templates/esqueci-senha.html',
-      // })
-
       .state('tab', {
         url: '/tab',
         params: { reload: false },
@@ -149,6 +144,16 @@ angular.module('easydent', ['ionic',
           'tab-configuracoes': {
             templateUrl: 'templates/tabs/dentistas.html',
             controller: 'DentistasCtrl'
+          }
+        }
+      })
+
+      .state('tab.conta', {
+        url: '/account',
+        views: {
+          'tab-configuracoes': {
+            templateUrl: 'templates/account.html',
+            controller: 'AccountCtrl'
           }
         }
       })

@@ -6,15 +6,25 @@
 
   <ion-content>
 
-    <div ng-if="editando" style="text-align: center; padding: 5px; font-weight: bold;">
+    <!--<div ng-if="editando" style="text-align: center; padding: 5px; font-weight: bold;">
       Editando Agendamento
-    </div>
+    </div>-->
 
     <div class="list padding">
 
       <form name="novoAgendamentoForm">
 
-        <label class="item item-input item-select">
+        <div ng-if="!editando" class="button-bar" style="margin: 10px 0px;">
+          <button ng-if="agendamento.fgSituacaoConsultaEnum === 0" ng class="button button-energized" ng-click="toggleEdicao()">Editar dados da consulta</button>
+          <button ng-if="agendamento.fgSituacaoConsultaEnum === 1" ng class="button button-balanced">Paciente Atendido</button>
+          <button ng-if="agendamento.fgSituacaoConsultaEnum === 3" ng class="button button-assertive">Paciente Faltou</button>
+        </div>
+
+        <div class="button-bar" style="margin: 10px 0px;" ng-disabled="editando">
+          <button class="button" ng-if="editando" ng-click="descartarAlteracoes()">Descartar Alterações</button>
+        </div>
+
+        <label class="item item-input item-select" ng-disabled="!editando">
           <div class="input-label">Paciente</div>
           <select ng-model="agendamento.paciente" ng-disabled="!editando" ng-options="paciente as paciente.nome for paciente in pacientes track by paciente.id"></select>
         </label>
@@ -34,11 +44,11 @@
         <div class="item item-input" ng-disabled="!editando" ng-if="!novoAgendamento.diaCompleto">
           <span class="input-label">Duração</span>
           <div style="width: 60%; text-align: right;" ng-disabled="!editando">
-            <button class="button button-small" ng-click="diminuirDuracao()" ng-disabled="!editando">-</button>
-            <div class="button button-small" style="background-color: transparent !important; width: 83px;" ng-disabled="!editando">
+            <button class="button" ng-click="diminuirDuracao()" ng-disabled="!editando">-</button>
+            <div class="button" style="background-color: transparent !important; width: 83px;" ng-disabled="!editando">
               {{agendamento.duracaoMinutos | minutesOrHours}}
             </div>
-            <button class="button button-small" ng-click="aumentarDuracao()" ng-disabled="!editando">+</button>
+            <button class="button" ng-click="aumentarDuracao()" ng-disabled="!editando">+</button>
           </div>
         </div>
 
@@ -52,15 +62,13 @@
       </form>
 
       <div class="button-bar" style="margin: 10px 0px;" ng-if="!editando">
-        <button class="button button-energized button-small" ng-click="toggleEdicao()">Editar Consulta</button>
+        <button class="button button-assertive" ng-click="cancelarConsulta(agendamento)" ng-disabled="agendamento.fgSituacaoConsultaEnum !== 0">Cancelar</button>
+        <button class="button button-assertive" ng-click="pacienteFaltou(agendamento)" ng-disabled="agendamento.fgSituacaoConsultaEnum !== 0 || !agendamentoPassado">Faltou</button>
+        <button class="button button-balanced" ng-click="confirmarComparecimento(agendamento)" ng-disabled="agendamento.fgSituacaoConsultaEnum !== 0 || !agendamentoPassado">Atendido</button>
       </div>
-      <div class="button-bar" style="margin: 10px 0px;" ng-if="!editando">
-        <button class="button button-assertive button-small" ng-click="cancelarConsulta(agendamento)">Cancelar Consulta</button>
-        <button class="button button-balanced button-small" ng-click="confirmarComparecimento(agendamento)">Paciente Atendido</button>
-      </div>
+
       <div class="button-bar" style="margin: 10px 0px;" ng-disabled="editando">
-        <button class="button button-small" ng-if="editando" ng-click="descartarAlteracoes()">Descartar Alterações</button>
-        <button class="button button-small button-balanced" ng-if="editando" ng-click="concluirEdicao()">Salvar</button>
+        <button class="button button-balanced" ng-if="editando" ng-click="concluirEdicao()">Concluir Alterações e Salvar</button>
       </div>
 
     </div>

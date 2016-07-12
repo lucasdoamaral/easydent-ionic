@@ -1,0 +1,63 @@
+<ion-view view-title="Minha Conta">
+
+    <ion-nav-buttons side="right">
+        <button class="button" ng-if="!alterarSenha" ng-click="salvar(usuario)">Salvar</button>
+    </ion-nav-buttons>
+
+    <ion-content>
+
+        <form class="list">
+
+            <label class="item item-input item-label" ng-if="!alterarSenha">
+                <span class="input-label">Nome</span>
+                <input type="text" ng-model="usuario.nome" ng-if="!alterarSenha" placeholder="Nome completo" />
+            </label>
+
+            <label class="item item-input item-label" ng-if="!alterarSenha">
+                    <span class="input-label">Login</span>
+                    <input type="text" ng-model="usuario.login" ng-readonly="true" ng-if="!alterarSenha" placeholder="Nome de usuário">
+                </label>
+            <label class="item item-input item-label" ng-if="!alterarSenha">
+                    <span class="input-label">E-mail</span>
+                    <input type="email" ng-model="usuario.email" placeholder="E-mail" ng-if="!alterarSenha">
+                </label>
+
+            <div class="item item-divider" ng-if="!alterarSenha"></div>
+
+            <label class="item item-input item-label" ng-if="!alterarSenha">
+                <span class="input-label">Estabelecimento</span>
+                <input type="text" ng-model="usuario.estabelecimento.nome" placeholder="Nome do Estabelecimento" ng-if="!alterarSenha">
+            </label>
+
+            <div ng-if="!alterarSenha" class="padding">
+                <input type="button" ng-click="togglePasswordChange()" class="button button-block button-assertive" value="Alterar senha"/>
+            </div>
+
+            <div ng-if="alterarSenha">
+
+                <div class="item item-divider"></div>
+
+                <label class="item item-input item-label">
+                    <span class="input-label">Senha atual</span>
+                    <input type="password" ng-model="usuario.senhaAtual">
+                </label>
+                <label class="item item-input item-label">
+                    <span class="input-label">Nova senha</span>
+                    <input type="password" ng-model="usuario.senha">
+                </label>
+                <label class="item item-input item-label">
+                    <span class="input-label">Confirmação de senha</span>
+                    <input type="password" ng-model="usuario.confirmacaoSenha" >
+                </label>
+                <div class="button-bar padding">
+                    <button class="button button-balanced" ng-click="cancelPasswordChange()">Cancelar</button>
+                    <button class="button button-assertive" ng-click="changePassword(usuario)">Alterar Senha</button>
+                </div>
+            </div>
+        </form>
+
+
+
+    </ion-content>
+
+</ion-view>
