@@ -93,6 +93,7 @@ angular.module('easydent.controllers', [])
 					// $log.error(error);
 				}
 			);
+
 		};
 
 		$scope.criarUsuario = function (novoUsuario, novoEstabelecimento) {
@@ -951,7 +952,8 @@ angular.module('easydent.controllers', [])
 
 			var paciente = $scope.paciente;
 
-			if (!paciente.nome) {
+			if (!paciente.nome
+				|| !paciente.dataNascimento) {
 				$ionicPopup.show({
 					template: 'Informe todos os campos necessários para criar um paciente!',
 					buttons: [{

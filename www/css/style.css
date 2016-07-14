@@ -135,8 +135,8 @@ td.event-detail.ng-binding, td.monthview-eventdetail-timecolumn.ng-binding {
 }
 
 td.monthview-eventdetail-timecolumn.ng-binding {
-    width: 80px;
-    padding: 5px 2px;
+    width: 90px;
+    padding: 5px 0px;
     box-sizing: content-box;
     line-height: 26px;
 }
@@ -245,4 +245,10 @@ body.keyboard-open .has-footer{
 
 .keyboard-open .has-footer {
 bottom: 0;
+}
+small.ng-binding {
+    font-size: 80% !important;
+}
+th {
+    font-size: 85% !important;
 }

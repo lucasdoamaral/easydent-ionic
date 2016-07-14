@@ -35,6 +35,9 @@
         ],
         "angular/no-service-method": [
             "off"
+        ],
+        "angular/on-watch": [
+            "off"
         ]
     }
 }

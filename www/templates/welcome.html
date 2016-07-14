@@ -1,15 +1,10 @@
 <ion-view name="inicio-tab">
 
 	<ion-content class="welcome" scroll="false">
-
-		<!-- <img src="img/logo.png"> -->
-
 		<div class="card">
 			<div class="item item-divider center">Seja bem vindo ao Easydent!</div>
 
 			<form name="loginForm" ng-submit="entrar(login)">
-
-
 				<div class="item">
 
 					<label class="item item-input">
@@ -20,8 +15,7 @@
 						<input type="password" name="senha" placeholder="Senha" ng-model="login.senha" required>
 					</label>
 
-					<input type="submit" value="Entrar" class="button button-block button-balanced" ng-click="entrar(login)">
-					</input>
+					<input type="submit" value="Entrar" class="button button-block button-balanced" ng-click="entrar(login)" />
 
 					<p class="text-center">
 						<a href="#/esqueci-senha">Esqueci a senha</a>
@@ -35,6 +29,8 @@
 					</p>
 				</div>
 
+			</form>
+		</div>
 	</ion-content>
 
 </ion-view>
